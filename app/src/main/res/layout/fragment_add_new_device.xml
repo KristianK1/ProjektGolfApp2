@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:text="Unos novog uređaja"
+                android:textAlignment="center"
+                android:textSize="30dp"
+                android:layout_margin="30dp"
+                />
+
+
+
+
+
+
+
+
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintStart_toStartOf="parent"
+                android:text="Name: "
+                android:layout_margin="20dp"
+                android:textSize="30dp"
+                />
+
+            <EditText
+                android:id="@+id/et_name"
+                app:layout_constraintStart_toEndOf="@id/tv_APIkey"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_name"
+                android:hint="Unesite ime za novi uređaj"
+                android:layout_height="wrap_content"
+                android:layout_width="0px"
+                android:autofillHints="name"
+                />
+
+
+
+
+
+
+
+            <TextView
+                android:id="@+id/tv_channelId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/et_name"
+                app:layout_constraintStart_toStartOf="parent"
+                android:text="Channel Id: "
+                android:layout_margin="20dp"
+                android:textSize="30dp"
+                />
+
+            <EditText
+                android:id="@+id/et_channelId"
+                app:layout_constraintStart_toEndOf="@id/tv_channelId"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_channelId"
+                android:hint="Unesite channel ID"
+                android:layout_height="wrap_content"
+                android:layout_width="0px"
+                android:inputType="number"
+                android:autofillHints="name"
+                />
+
+
+
+
+
+
+
+
+
+            <TextView
+                android:id="@+id/tv_APIkey"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/et_channelId"
+                app:layout_constraintStart_toStartOf="parent"
+                android:text="API key: "
+                android:layout_margin="20dp"
+                android:textSize="30dp"
+                />
+
+            <EditText
+                android:id="@+id/et_APIkey"
+                app:layout_constraintStart_toEndOf="@id/tv_APIkey"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_APIkey"
+                android:hint="Unesite API ključ"
+                android:layout_height="wrap_content"
+                android:layout_width="0px"
+                android:autofillHints="password"
+                />
+
+
+
+
+
+
+
+
+            <TextView
+                android:id="@+id/tv_MAC_ADD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/et_APIkey"
+                app:layout_constraintStart_toStartOf="parent"
+                android:text="MAC: "
+                android:layout_margin="20dp"
+                android:textSize="30dp"
+                />
+
+            <EditText
+                android:id="@+id/et_MAC_ADD"
+                app:layout_constraintStart_toEndOf="@id/tv_MAC_ADD"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_MAC_ADD"
+                android:hint="Unesite MAC adresu uređaja"
+                android:layout_height="wrap_content"
+                android:layout_width="0px"
+                />
+
+            <Button
+                android:id="@+id/bt_addDev"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Unesite novi uređaj"
+                app:layout_constraintTop_toBottomOf="@id/et_MAC_ADD"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="20dp"
+
+                />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

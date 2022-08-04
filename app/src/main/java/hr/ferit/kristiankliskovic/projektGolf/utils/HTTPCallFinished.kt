@@ -1,5 +1,5 @@
 package hr.ferit.kristiankliskovic.projektGolf.utils
 
 interface HTTPCallFinished {
-    fun callFinished(value: String);
+    fun callFinished(value: String?);
 }

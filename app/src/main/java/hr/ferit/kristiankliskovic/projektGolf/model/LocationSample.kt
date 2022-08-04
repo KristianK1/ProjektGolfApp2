@@ -16,6 +16,12 @@ data class LocationSample(
     @ColumnInfo(name="ReadAPIkey")
     var ReadAPIkey: String,
 
+    @ColumnInfo(name="entry_id")
+    var entry_id: Int,
+
+    @ColumnInfo(name="created_at")
+    var created_at: String,
+
     @ColumnInfo(name = "longitude")
     val longitude: Double,
 
@@ -23,5 +29,8 @@ data class LocationSample(
     val latitude: Double,
 
     @ColumnInfo(name="speed")
-    val speed: Double
+    val speed: Double,
+
+    @ColumnInfo(name="marker")
+    val marker: Boolean
 ){}

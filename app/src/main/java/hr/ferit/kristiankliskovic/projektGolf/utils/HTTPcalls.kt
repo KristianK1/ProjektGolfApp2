@@ -10,20 +10,21 @@ import hr.ferit.kristiankliskovic.projektGolf.mainSomething
 
 object HTTPcalls {
     // Instantiate the RequestQueue.
-    val queue = Volley.newRequestQueue(mainSomething.application)
-    val url = "https://api.thingspeak.com/channels/1120413/feeds.json?api_key=SL9M2RUMWFGH5DIS&results=9000000000"
+    private val queue = Volley.newRequestQueue(mainSomething.application)
 
     // Request a string response from the provided URL.
 
-    fun requestCall(url: String, randValue: Int, listener: ){
+    fun requestCall(url: String,listener: HTTPCallFinished){
+
         Log.i("httpVV", "STARTED")
         val stringRequest = StringRequest(
             Request.Method.GET, url,
             { response ->
-
+                listener.callFinished(response);
                 Log.i("httpVV", response);
             },
             { error ->
+                listener.callFinished(null)
                 Log.i("httpVV", error.toString())
             }
         )

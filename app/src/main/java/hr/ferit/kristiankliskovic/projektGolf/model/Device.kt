@@ -20,5 +20,8 @@ data class Device(
     var ReadAPIkey: String,
 
     @ColumnInfo(name="BT_MAC_address")
-    var BT_MAC_address: String
+    var BT_MAC_address: String,
+
+    @ColumnInfo(name="lastRefreshed")
+    var lastRefreshed: String,
 ){}

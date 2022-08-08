@@ -43,9 +43,15 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
         "1 day",
         "2 days",
         "5 days",
+        "7 days",
         "10 days",
+        "14 days",
         "30 days",
-        "90 days"
+        "60 days",
+        "90 days",
+        "120 days",
+        "180 days",
+        "365 days",
     )
 
     override fun onCreateView(
@@ -132,6 +138,7 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
                         deviceRepository.deviceDao.delete(device)
+                        deviceRepository.deleteLSfrom(device)
                         updateData()
                     }
                     DialogInterface.BUTTON_NEGATIVE -> {}
@@ -169,11 +176,12 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
                         set(Calendar.YEAR, y)
                         set(Calendar.MONTH, m)
                         set(Calendar.DAY_OF_MONTH, d)
-                        set(Calendar.HOUR, hourOfDay)
+                        set(Calendar.HOUR_OF_DAY, hourOfDay)
                         set(Calendar.MINUTE, minute)
+                        set(Calendar.SECOND, 0)
                     }
 
-                    val formattedDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'").format(myCall1.time)
+                    val formattedDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(myCall1.time)
                     Log.i("pickDate", "done "+ formattedDate)
                     setIntervalTimestamp(1, formattedDate)
                 }
@@ -210,11 +218,12 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
                         set(Calendar.YEAR, y)
                         set(Calendar.MONTH, m)
                         set(Calendar.DAY_OF_MONTH, d)
-                        set(Calendar.HOUR, hourOfDay)
+                        set(Calendar.HOUR_OF_DAY, hourOfDay)
                         set(Calendar.MINUTE, minute)
+                        set(Calendar.SECOND, 0)
                     }
 
-                    val formattedDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'").format(myCall2.time)
+                    val formattedDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(myCall2.time)
                     Log.i("pickDate", "done "+ formattedDate)
                     setIntervalTimestamp(2, formattedDate)
                 }
@@ -236,7 +245,7 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
         var unix2: Long = 0
 
 
-        var sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+        var sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
         try {
             val date = sdf.parse(date1)
@@ -290,7 +299,7 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
     private fun showTimeStamp(which: Int, dateStr: String) {
         val cal = Calendar.getInstance()
         try{
-            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
             val date = sdf.parse(dateStr)
             cal.time = date
         } catch(e: Throwable){

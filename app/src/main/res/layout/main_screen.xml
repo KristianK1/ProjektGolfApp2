@@ -6,45 +6,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
 
-
     <fragment
         android:id="@+id/google_map"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_above="@id/centerView"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-/>
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/centerView"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        />
+
 
 
     <Button
         android:id="@+id/bt_blue"
         android:layout_width="80dp"
         android:layout_height="50dp"
-        android:text="BT"
+        android:text="Bluetooth"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_alignEnd="@id/centerView"
+        android:layout_toLeftOf="@id/centerView"
         android:layout_margin="5dp"
         />
 
-    <View
+    <Button
         android:id="@+id/centerView"
-        android:layout_width="1px"
+        android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="5dp"
+        android:text="Center"
+        android:gravity="center"
         />
 
     <Button
         android:id="@+id/bt_sett"
         android:layout_width="80dp"
         android:layout_height="50dp"
-        android:text="SETT"
-        android:layout_alignStart="@id/centerView"
+        android:text="Settings"
+        android:layout_toRightOf="@id/centerView"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="5dp"

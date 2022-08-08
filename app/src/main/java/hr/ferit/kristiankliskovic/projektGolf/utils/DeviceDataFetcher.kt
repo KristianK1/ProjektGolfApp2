@@ -1,17 +1,11 @@
 package hr.ferit.kristiankliskovic.projektGolf.utils
 
-import android.location.GnssAntennaInfo
 import android.util.Log
-import com.android.volley.Response
 import com.google.gson.Gson
-import hr.ferit.kristiankliskovic.projektGolf.data.DeviceDao
-import hr.ferit.kristiankliskovic.projektGolf.data.DeviceRepository
-import hr.ferit.kristiankliskovic.projektGolf.data.DeviceRepositoryImpl
 import hr.ferit.kristiankliskovic.projektGolf.di.DeviceRepositoryFactory
 import hr.ferit.kristiankliskovic.projektGolf.model.Device
 import hr.ferit.kristiankliskovic.projektGolf.model.LocationSample
 import hr.ferit.kristiankliskovic.projektGolf.model.TSmainClass
-import org.xml.sax.Locator
 
 class DeviceDataFetcher {
     val gson = Gson()
@@ -44,10 +38,11 @@ class DeviceDataFetcher {
                         totalRez.channel = data.channel
                         topListener.onDataRecived(totalRez)
                     }
-                    if(data.feeds[0].entry_id == 1){
+                    //if(data.feeds[0].entry_id == 1){
+                    if(data.feeds.size < 8000){
                         Log.i("dataaa", "prije = " + data.feeds.size + " (novi)+(stari) " + totalRez.feeds.size)
                         totalRez.feeds = data.feeds + totalRez.feeds
-
+                        totalRez.channel = data.channel
                         Log.i("dataaa", "poslije + = " + totalRez.feeds.size)
                         Log.i("dataaa", "gotovo")
                         topListener.onDataRecived(totalRez)
@@ -85,20 +80,40 @@ class DeviceDataFetcher {
         HTTPcalls.requestCall(fullLink, listener)
     }
 
-    fun fetchAllandSave(chId: String, APIkey: String){
-
-        val listener: TSdataFetched = object : TSdataFetched{
+    fun fetchRecentAndSave(chId: String, APIkey: String, timeStampStart: String, listener: DBinserted){
+        val unix30minsLess = CalendarToUnix(ISOtoCalendar(timeStampStart)) - (60 * 30)
+        Log.i("dataaa", "unix mid value "  + unix30minsLess)
+        val startTimeStampMOdified = CalendarToIso(UnixToCalendar(unix30minsLess)!!)
+        Log.i("dataaa", "modifiredTime" + startTimeStampMOdified)
+        Log.i("dataaa update", "started Save")
+        val listener2: TSdataFetched = object : TSdataFetched{
             override fun onDataRecived(data: TSmainClass) {
-                Log.i("dataaa", Gson().toJson(data))
-                Log.i("dataaaa", "" +data.feeds?.size)
                 val LSlist: MutableList<LocationSample> = locDataConverter().TSobjectToLocationSamples_s(data, APIkey)
-                for(LS in LSlist){
-                    Log.i("saveData", "one")
-                    deviceRepository.insertLocationSamples(LS)
-                }
+                deviceRepository.insertMultipleinsertsLocationSamples(LSlist)
+                deviceRepository.updatedLastUpdated(LSlist[LSlist.size-1].created_at, Device(0,"", chId, APIkey,"", ""))
+                Log.i("dataaa update", "finished Insert")
+                listener.onDBinsertFinished()
             }
         }
-        DeviceDataFetcher().fetchInterval("1120413", "SL9M2RUMWFGH5DIS", "2000-01-01T00:00:00Z", "2100-01-01T00:00:00Z", listener)
+        DeviceDataFetcher().fetchInterval(chId, APIkey, startTimeStampMOdified, "2100-01-01T00:00:00Z", listener2)
+    }
+
+
+    fun fetchAllandSave(chId: String, APIkey: String){
+        Log.i("dataaa", "started Save")
+        val listener: TSdataFetched = object : TSdataFetched{
+            override fun onDataRecived(data: TSmainClass) {
+                Log.i("bitnoTT", Gson().toJson(data))
+
+                Log.i("bitnoTT", "" +data.feeds?.size)
+                val LSlist: MutableList<LocationSample> = locDataConverter().TSobjectToLocationSamples_s(data, APIkey)
+
+                deviceRepository.insertMultipleinsertsLocationSamples(LSlist)
+                deviceRepository.updatedLastUpdated(LSlist[LSlist.size-1].created_at, Device( 0,"", chId, APIkey,"", ""))
+                Log.i("dataaa", "finished Insert")
+            }
+        }
+        DeviceDataFetcher().fetchInterval(chId, APIkey, "2000-01-01T00:00:00Z", "2100-01-01T00:00:00Z", listener)
     }
 
 

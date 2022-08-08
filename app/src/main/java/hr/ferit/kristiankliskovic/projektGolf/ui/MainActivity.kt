@@ -11,12 +11,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        Log.i("ima li te", "eo me1")
         binding = ActivityMainBinding.inflate(layoutInflater)
-        Log.i("ima li te", "eo me2")
         setContentView(binding.root)
-        Log.i("ima li te", "eo m3")
 
     }
 

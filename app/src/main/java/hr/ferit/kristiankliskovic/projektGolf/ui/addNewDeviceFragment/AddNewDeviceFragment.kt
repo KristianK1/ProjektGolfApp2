@@ -75,25 +75,7 @@ class AddNewDeviceFragment: Fragment() {
             Toast.makeText(context, "Postoji uređaj sa istim API ključem i Channel Id-om", LENGTH_SHORT).show()
         }
         else{
-            val listener: HTTPCallFinished =
-                object : HTTPCallFinished{
-                    override fun callFinished(value: String?) {
-                        if(value == null ){
-                            Log.i("httpVV", "add new NULL")
-                            return
-                        }
-                        Log.i("httpVV", "tjt")
-                        Log.i("httpVV", value);
-                        if(value.length > 30){
-                            deviceRepository.save(device);
-                            Toast.makeText(context, "Uspješno obavljena provjera", LENGTH_SHORT).show()
-                            goBack()
-                        }
-                        else{
-                            Toast.makeText(context, "Podaci nisu uspješno provjereni", LENGTH_SHORT).show()
-                        }
-                    }
-                }
+
 
             val smallCallListener: HTTPCallFinished =
                 object: HTTPCallFinished{
@@ -105,10 +87,12 @@ class AddNewDeviceFragment: Fragment() {
                         Log.i("httpVV", "tjt")
                         Log.i("httpVV", value);
                         if(value.length > 30){
+                            Log.i("ajdSta", "tu sam")
                             deviceRepository.save(device);
                             Toast.makeText(context, "Uspješno obavljena provjera", LENGTH_SHORT).show()
-
+                            Log.i("fetchAll", "prije poziva")
                             DeviceDataFetcher().fetchAllandSave(device.channelId, device.ReadAPIkey)
+                            Log.i("fetchAll", "nakon poziva")
                             goBack()
                         }
                         else{
@@ -116,7 +100,7 @@ class AddNewDeviceFragment: Fragment() {
                         }
                     }
                 }
-            HTTPcalls.requestCall(DeviceDataFetcher().constructBasicUrl(device.channelId, device.ReadAPIkey), listener)
+            HTTPcalls.requestCall(DeviceDataFetcher().constructBasicUrl(device.channelId, device.ReadAPIkey), smallCallListener)
         }
     }
 

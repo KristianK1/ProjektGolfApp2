@@ -32,5 +32,13 @@
         <action
             android:id="@+id/action_mainFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_bluetoothCommunicationFragment"
+            app:destination="@id/bluetoothCommunicationFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/bluetoothCommunicationFragment"
+        android:name="hr.ferit.kristiankliskovic.projektGolf.ui.bluetoothFragment.BluetoothCommunicationFragment"
+        android:label="BluetoothCommunicationFragment"
+        tools:layout="@layout/bluetooth_screen"/>
 </navigation>

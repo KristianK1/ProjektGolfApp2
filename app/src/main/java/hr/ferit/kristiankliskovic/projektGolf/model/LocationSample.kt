@@ -4,12 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "locationSamples")
+@Entity(tableName = "locationSamples",
+primaryKeys = ["channelId", "ReadAPIkey", "entry_id", "created_at", "longitude", "latitude", "inLineIndex"])
 data class LocationSample(
-
-    @PrimaryKey(autoGenerate = true)
-    var id: Long = 0,
-
     @ColumnInfo(name="channelId")
     var channelId: String,
 
@@ -32,5 +29,8 @@ data class LocationSample(
     val speed: Double,
 
     @ColumnInfo(name="marker")
-    val marker: Boolean
+    val marker: Boolean,
+
+    @ColumnInfo(name = "inLineIndex")
+    val inLineIndex: Int
 ){}

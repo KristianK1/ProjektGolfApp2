@@ -249,10 +249,10 @@ class MainFragment: Fragment() {
     }
 
     private fun refresh() {
-        appIsBusy = true;
+
         Log.i("mainQ", "EO ME")
         if(currentDevice != null){
-
+            appIsBusy = true;
             val tsStart = currentDevice!!.lastRefreshed
             Log.i("dataaa", "since When :" + tsStart)
             val listener: DBinserted =

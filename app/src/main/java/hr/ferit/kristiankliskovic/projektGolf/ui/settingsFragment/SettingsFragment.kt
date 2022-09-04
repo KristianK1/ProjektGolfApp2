@@ -30,7 +30,6 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
     private lateinit var adapter: DeviceAdapter
     private val deviceRepository = DeviceRepositoryFactory.deviceRepository
 
-
     private val history_modes = arrayOf(
         "10 min",
         "20 min",
@@ -51,7 +50,6 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
         "90 days",
         "120 days",
         "180 days",
-        "365 days",
     )
 
     override fun onCreateView(
@@ -265,9 +263,18 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
         }
         Log.i("unix1", ""+unix1)
         Log.i("unix2", ""+unix2)
-        if(unix2 > unix1) return true
+        Log.i("unixx", "" + (unix2-unix1))
+        Log.i("unixx", "" + (1000L*60L*60L*24L*200L))
 
-        return false
+        if(unix2 <= unix1){
+            Toast.makeText(context, "Vrijeme početka i kraja nisu konzistenti", Toast.LENGTH_SHORT).show()
+            return false;
+        }
+        else if((unix2 - unix1) > (1000L*60L*60L*24L*200L)) {
+            Toast.makeText(context, "Vrijeme početka i kraja se razlikuju za više od 200 dana", Toast.LENGTH_SHORT).show()
+            return false;
+        }
+        return true;
     }
 
     private fun setIntervalTimestamp(which: Int, date: String){
@@ -288,8 +295,6 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
 
         Log.i("unix", "HELLO")
         if(!checkDateValidity(d1,d2)) {
-
-            Toast.makeText(context, "Vrijeme početka i kraja nisu konzistenti", Toast.LENGTH_SHORT).show()
             return
         }
         showTimeStamp(which, date)

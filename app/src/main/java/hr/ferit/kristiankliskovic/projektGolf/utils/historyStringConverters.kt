@@ -22,7 +22,6 @@ fun historyStringToSeconds(his: String): Int{
         "90 days" -> rez = 60 * 60 * 24 * 90
         "120 days" -> rez = 60 * 60 * 24 * 120
         "180 days" -> rez = 60 * 60 * 24 * 180
-        "365 days" -> rez = 60 * 60 * 24 * 365
         else -> rez = 0
     }
     return rez

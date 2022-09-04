@@ -35,6 +35,7 @@ import java.util.*
 
 class MainFragment: Fragment() {
 
+    private var appIsBusy: Boolean = false
     private lateinit var binding: MainScreenBinding
     private var timer: Timer = Timer()
     private lateinit var map: GoogleMap
@@ -49,9 +50,6 @@ class MainFragment: Fragment() {
     private var liveTracking: Boolean? = true
     private var currCenterLocation: LatLng? = null
 
-    private var stupidColors = arrayListOf<Int>(Color.RED, Color.GREEN, Color.CYAN, Color.GRAY, Color.YELLOW, Color.BLUE, Color.MAGENTA, Color.DKGRAY)
-    private var colorr: Int = 0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -61,16 +59,14 @@ class MainFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        getSettings()
-        binding = MainScreenBinding.inflate(layoutInflater)
-        binding.btSett.setOnClickListener{
-            val action = MainFragmentDirections.actionMainFragmentToSettingsFragment()
-            findNavController().navigate(action)
-        }
 
-        binding.btBlue.setOnClickListener {
-            val action = MainFragmentDirections.actionMainFragmentToBluetoothCommunicationFragment()
-            findNavController().navigate(action)
+        binding = MainScreenBinding.inflate(layoutInflater)
+        getSettings()
+        binding.btSett.setOnClickListener {
+            if(appIsBusy == false){
+                val action = MainFragmentDirections.actionMainFragmentToSettingsFragment()
+                findNavController().navigate(action)
+            }
         }
 
         if(centerMap == true)
@@ -109,8 +105,6 @@ class MainFragment: Fragment() {
             timer.scheduleAtFixedRate(object : TimerTask() {
                 override fun run() {
                     Log.i("interval", "This function is called every 10 seconds.")
-                    colorr = (colorr + 1)%8
-                    binding.btBlue.setBackgroundColor(stupidColors[colorr])
                     refresh()
                 }
             }, 0, 10000)
@@ -172,7 +166,12 @@ class MainFragment: Fragment() {
 
     fun getSettings(){
 
-        val Name = preferencesManager().getCurrDeviceName()
+        var Name = "";
+        try{
+            Name = preferencesManager().getCurrDeviceName()
+        } catch (e: Throwable) {
+            Log.i("errrS", "FS");
+        }
         if(Name == ""){
             Toast.makeText(context, "Nije postavljen uređaj", LENGTH_SHORT).show()
             startInterval = null
@@ -249,6 +248,7 @@ class MainFragment: Fragment() {
     }
 
     private fun refresh() {
+        appIsBusy = true;
         Log.i("mainQ", "EO ME")
         if(currentDevice != null){
 
@@ -279,7 +279,10 @@ class MainFragment: Fragment() {
         updateCurrentDevice()
         getSettings()
 
-        if(startInterval == null) return
+        if(startInterval == null) {
+            appIsBusy = false;
+            return
+        }
 
         val LL: ArrayList<LatLng> = ArrayList<LatLng>()
 
@@ -360,6 +363,8 @@ class MainFragment: Fragment() {
             Log.i("markers", Gson().toJson(marker))
             map.addMarker(marker)
         }
+
+        appIsBusy = false;
     }
 
     fun test(){

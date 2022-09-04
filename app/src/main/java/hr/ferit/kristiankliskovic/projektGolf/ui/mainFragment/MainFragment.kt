@@ -178,6 +178,7 @@ class MainFragment: Fragment() {
             endInterval = null
             displayMarkers = false
             currCenterLocation = null
+            appIsBusy = false
             binding.centerView.setBackgroundColor(Color.RED);
             return
         }

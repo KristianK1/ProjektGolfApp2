@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import hr.ferit.kristiankliskovic.projektGolf.data.preferencesManager
 import hr.ferit.kristiankliskovic.projektGolf.databinding.FragmentSettingsBinding
 import hr.ferit.kristiankliskovic.projektGolf.di.DeviceRepositoryFactory
@@ -122,10 +123,12 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
     }
 
     private fun updateData(){
-        val allDevs = deviceRepository.getAllDevices()
+        val allDevs = myUserState.myUser!!.devices
         adapter.setDevices(allDevs)
+        Log.i("deleteDevice", Gson().toJson(allDevs))
+        val currDev = myUserState.myDevice
+        Log.i("deleteDevice", Gson().toJson(currDev))
 
-        val currDev = getCurrentDevice()
         if(currDev == null){
             if(allDevs.isNotEmpty()){
                 setCurrentDevice(allDevs[0].name)
@@ -135,7 +138,7 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
             }
         }
         else{
-            binding.tvCurrentName.text = currDev
+            binding.tvCurrentName.text = myUserState.myDevice!!.name
         }
     }
 
@@ -149,9 +152,7 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
             DialogInterface.OnClickListener { dialog, which ->
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
-                        deviceRepository.deviceDao.delete(device)
                         myUserState.deleteDevice(device.name)
-                        deviceRepository.deleteLSfrom(device)
                         updateData()
                     }
                     DialogInterface.BUTTON_NEGATIVE -> {}
@@ -313,8 +314,7 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
             return
         }
         showTimeStamp(which, date)
-        preferencesManager.saveTimestamp(which,date);
-
+        preferencesManager.saveTimestamp(which,date)
     }
 
     private fun showTimeStamp(which: Int, dateStr: String) {

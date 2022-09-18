@@ -1,6 +1,9 @@
 package hr.ferit.kristiankliskovic.projektGolf
 
 import android.app.Application
+import android.util.Log
+import android.view.KeyEvent
+import com.google.gson.Gson
 import hr.ferit.kristiankliskovic.projektGolf.utils.firebaseComm
 
 class mainSomething: Application() {

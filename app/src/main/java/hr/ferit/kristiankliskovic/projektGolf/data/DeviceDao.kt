@@ -12,8 +12,8 @@ interface DeviceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(device: Device)
 
-    @Delete
-    fun delete(device: Device)
+    @Query("DELETE FROM devices WHERE channelId = :chId AND ReadAPIkey = :api")
+    fun delete(chId: String, api: String)
 
     @Query("SELECT * from devices")
     fun getAllDevices(): List<Device>
@@ -42,15 +42,6 @@ interface DeviceDao {
         }
     }
 
-
     @Query("SELECT * FROM locationSamples WHERE channelId = :chId AND ReadAPIkey = :api AND created_at BETWEEN 0 AND :upToDate ORDER BY created_at DESC, inLineIndex DESC LIMIT 1")
     fun getLastLSfrom(chId: String, api: String, upToDate: String): List<LocationSample>
-
-    /*fun save(device: Device)
-    fun delete(device: Device)
-    fun getAllDevices(): List<Device>
-
-    fun insertLocationSamples(Ls_list: List<LocationSample>)
-    fun delete_LS_from(device: Device)
-    fun get_LS_from(device: Device): List<LocationSample>*/
 }

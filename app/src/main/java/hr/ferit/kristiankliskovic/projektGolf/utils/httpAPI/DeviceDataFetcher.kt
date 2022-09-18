@@ -8,6 +8,7 @@ import hr.ferit.kristiankliskovic.projektGolf.model.LocationSample
 import hr.ferit.kristiankliskovic.projektGolf.model.TSmainClass
 import hr.ferit.kristiankliskovic.projektGolf.utils.genericListener
 import hr.ferit.kristiankliskovic.projektGolf.utils.*
+import java.util.*
 
 class DeviceDataFetcher {
     val gson = Gson()
@@ -108,6 +109,30 @@ class DeviceDataFetcher {
         Log.i("dataaa", "unix mid value " + unix30minsLess)
         val startTimeStampMOdified = CalendarToIso(UnixToCalendar(unix30minsLess)!!)
         Log.i("dataaa", "modifiredTime" + startTimeStampMOdified)
+
+        val randGenerator = Random(Calendar.getInstance().timeInMillis)
+        val randSeconds = randGenerator.nextInt()%60;
+        val randMinutes = randGenerator.nextInt()%60 + 10;
+        val randHours = randGenerator.nextInt()%24 + 10;
+        val randDay =  randGenerator.nextInt()%28 + 10;
+        val randMonth =  randGenerator.nextInt()%12 + 10;
+
+        var secondsString = randSeconds.toString()
+        if(secondsString.length == 1) secondsString = "0$secondsString"
+
+        var minutesString = randMinutes.toString()
+        if(minutesString.length == 1) minutesString = "0$minutesString"
+
+        var hourString = randHours.toString()
+        if(hourString.length == 1) hourString = "0$hourString"
+
+        var dayString = randDay.toString()
+        if(dayString.length == 1) dayString = "0$dayString"
+
+        var monthString = randMonth.toString()
+        if(monthString.length == 1) monthString = "0$monthString"
+
+        val endTime = "2100-$monthString-${dayString}T$hourString:$randMinutes:${randSeconds}Z"
         Log.i("dataaa update", "started Save")
         val listener2: TSdataFetched = object : TSdataFetched {
             override fun onDataRecived(data: TSmainClass) {
@@ -123,7 +148,7 @@ class DeviceDataFetcher {
         DeviceDataFetcher().fetchInterval(chId,
             APIkey,
             startTimeStampMOdified,
-            "2100-01-01T00:00:00Z",
+            endTime,
             listener2)
     }
 

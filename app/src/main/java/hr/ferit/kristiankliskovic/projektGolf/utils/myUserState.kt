@@ -7,6 +7,7 @@ import hr.ferit.kristiankliskovic.projektGolf.di.DeviceRepositoryFactory
 import hr.ferit.kristiankliskovic.projektGolf.model.Device
 import hr.ferit.kristiankliskovic.projektGolf.model.user
 import hr.ferit.kristiankliskovic.projektGolf.utils.httpAPI.DeviceDataFetcher
+import kotlin.math.log
 
 object myUserState {
     var myUser: user? = null
@@ -17,14 +18,20 @@ object myUserState {
         val myUser = preferencesManager.getUser()
         Log.i("usersList", Gson().toJson(myUser))
         if (myUser != null) {
+            var found = false
             for (user in firebaseComm.users) {
                 if (
-                    user.username == myUser!!.username &&
-                    user.password == myUser!!.password
+                    user.username == myUser.username &&
+                    user.password == myUser.password
                 ) {
+                    found = true
                     Log.i("userInBase", Gson().toJson(myUser))
                     login(user, false, listener)
                 }
+            }
+            if(found == false){
+                logout()
+                listener.callEnded()
             }
         }
         else{
@@ -33,6 +40,7 @@ object myUserState {
     }
 
     fun changeDevice(deviceName: String) {
+        Log.i("changeDevice", Gson().toJson(myUser))
         for (devices in myUser!!.devices) {
             if (devices.name == deviceName) {
                 preferencesManager.saveCurrDeviceName(deviceName)
@@ -65,8 +73,8 @@ object myUserState {
         if (resetSettings) {
             preferencesManager.setChoice(2)
             preferencesManager.setHistory("1 day")
-            preferencesManager.saveTimestamp(1, "");
-            preferencesManager.saveTimestamp(2, "");
+            preferencesManager.saveTimestamp(1, "")
+            preferencesManager.saveTimestamp(2, "")
 
             val numberofDevices = myUser!!.devices.size
             if (numberofDevices == 0) listener?.callEnded()
@@ -89,7 +97,7 @@ object myUserState {
 
         } else {
             val listaNovihUredaja: ArrayList<Device> = arrayListOf()
-            var devicesDownloaded = 0;
+            var devicesDownloaded = 0
 
 
             for (device in myUser!!.devices) {
@@ -126,7 +134,7 @@ object myUserState {
 
             for (device in deviceRepository.getAllDevices()) {
                 Log.i("loginX", "ROOM " + device.name )
-                var validDevice = false;
+                var validDevice = false
                 for (device2 in myUser!!.devices) {
                     Log.i("loginX", "FIREBASE " + device2.name )
                     if (device.name == device2.name) {
@@ -147,8 +155,8 @@ object myUserState {
         preferencesManager.saveCurrDeviceName("")
         preferencesManager.setChoice(2)
         preferencesManager.setHistory("1 day")
-        preferencesManager.saveTimestamp(1, "");
-        preferencesManager.saveTimestamp(2, "");
+        preferencesManager.saveTimestamp(1, "")
+        preferencesManager.saveTimestamp(2, "")
         while (deviceRepository.getAllDevices().isNotEmpty()) {
             deviceRepository.deleteLSfrom(deviceRepository.getAllDevices()[0])
             deviceRepository.delete(deviceRepository.getAllDevices()[0])
@@ -161,7 +169,7 @@ object myUserState {
         if (myUser!!.devices == null) {
             myUser!!.devices = arrayListOf()
         }
-        myUser!!.devices!!.add(device);
+        myUser!!.devices!!.add(device)
         preferencesManager.setUser(myUser!!)
         myDevice = device
         preferencesManager.saveCurrDeviceName(device.name)
@@ -176,8 +184,13 @@ object myUserState {
     fun deleteDevice(deviceName: String){
         for(device in myUser!!.devices){
             if(device.name == deviceName){
-                myUser!!.devices.remove(device);
+                myUser!!.devices.remove(device)
+                deviceRepository.deleteLSfrom(device)
+                deviceRepository.delete(device)
             }
+        }
+        if(myDevice?.name == deviceName){
+            myDevice = null
         }
         firebaseComm.changeUser(myUser!!)
     }

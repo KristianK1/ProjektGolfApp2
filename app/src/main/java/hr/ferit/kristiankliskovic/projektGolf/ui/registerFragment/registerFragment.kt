@@ -53,8 +53,7 @@ class registerFragment : Fragment() {
         }
 
         if (username.length < 5) {
-            Toast.makeText(context, "Korisničko ime sadrži manje od 5 znakova", Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(context, "Korisničko ime sadrži manje od 5 znakova", Toast.LENGTH_SHORT).show()
         } else if (password.length < 5) {
             Toast.makeText(context, "Lozinka sadrži manje od 5 znakova", Toast.LENGTH_SHORT).show()
         } else if (password != password2) {

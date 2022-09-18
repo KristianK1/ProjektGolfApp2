@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <fragment
         android:id="@+id/google_map"
@@ -15,37 +14,37 @@
         android:layout_above="@id/centerView"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        />
+        android:layout_alignParentEnd="true" />
 
+    <Button
+        android:id="@+id/bluetoothBT"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="5dp"
+        android:layout_toLeftOf="@id/centerView"
+        android:text="Bluetooth"
+        />
 
     <Button
         android:id="@+id/centerView"
-        android:layout_width="match_parent"
+        android:layout_width="100dp"
         android:layout_height="50dp"
-        android:layout_toLeftOf="@+id/middlePoint"
         android:layout_alignParentBottom="true"
-        android:layout_margin="5dp"
-        android:text="Center"
-        android:gravity="center"
-        />
-
-    <View
-        android:id="@+id/middlePoint"
-        android:layout_width="0px"
-        android:layout_height="0px"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        />
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:text="Center" />
+
 
     <Button
         android:id="@+id/bt_sett"
-        android:layout_width="80dp"
+        android:layout_width="0dp"
         android:layout_height="50dp"
-        android:text="Settings"
-        android:layout_toRightOf="@id/centerView"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:layout_margin="5dp"
-        />
+        android:layout_toRightOf="@id/centerView"
+        android:text="Settings" />
 </RelativeLayout>

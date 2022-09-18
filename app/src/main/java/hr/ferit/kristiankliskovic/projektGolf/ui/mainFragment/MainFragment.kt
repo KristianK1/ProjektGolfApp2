@@ -1,5 +1,7 @@
 package hr.ferit.kristiankliskovic.projektGolf.ui.mainFragment
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -28,6 +31,7 @@ import hr.ferit.kristiankliskovic.projektGolf.utils.*
 import hr.ferit.kristiankliskovic.projektGolf.utils.httpAPI.DBinserted
 import hr.ferit.kristiankliskovic.projektGolf.utils.httpAPI.DeviceDataFetcher
 import java.util.*
+import kotlin.concurrent.fixedRateTimer
 
 
 class MainFragment : Fragment() {
@@ -54,27 +58,20 @@ class MainFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
-
-//        val fm: FragmentManager = requireActivity().supportFragmentManager
-//        Log.i("backStack", "" + findNavController().backQueue.size)
-//        for(back in findNavController().backQueue){
-//            Log.i("backStack", back.destination.displayName)
-//            Log.i("backStack", back.id)
-//            Log.i("backStack", back.destination.navigatorName)
-//            if(back.destination.navigatorName == "fragment"){
-//                findNavController().popBackStack(back.destination.id, false)
-//            }
-//        }
-//
-//        Log.i("backStack", "" + findNavController().backQueue.size)
 
         binding = MainScreenBinding.inflate(layoutInflater)
         getSettings()
         binding.btSett.setOnClickListener {
             if (!appIsBusy) {
                 val action = MainFragmentDirections.actionMainFragmentToSettingsFragment()
+                findNavController().navigate(action)
+            }
+        }
+        binding.bluetoothBT.setOnClickListener {
+            if (!appIsBusy) {
+                val action = MainFragmentDirections.actionMainFragmentToBluetoothFragment()
                 findNavController().navigate(action)
             }
         }
@@ -144,6 +141,21 @@ class MainFragment : Fragment() {
     fun onMapReady(p0: GoogleMap) {
         Log.i("mapTTR", "ready")
         map = p0
+        if (ActivityCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        ) {
+            val should = ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            if (should) {
+                map.isMyLocationEnabled = true
+                map.uiSettings.isMyLocationButtonEnabled = true
+            }
+        }
+        map.isMyLocationEnabled = true
         if (currentDevice != null) {
             map.setOnCameraMoveStartedListener { reason ->
                 if (reason == OnCameraMoveStartedListener.REASON_GESTURE) {
@@ -173,15 +185,16 @@ class MainFragment : Fragment() {
             }
     }
 
-    fun getSettings() {
+    private fun getSettings() {
 
         var Name = "";
         try {
-            Name = preferencesManager.getCurrDeviceName()
+            Log.i("mainSetting", myUserState.myDevice!!.name)
+            Name = myUserState.myDevice!!.name
         } catch (e: Throwable) {
             Log.i("errrS", "FS");
         }
-        if (Name == "") {
+        if (Name.isNullOrEmpty()) {
             Toast.makeText(context, "Nije postavljen uređaj", LENGTH_SHORT).show()
             startInterval = null
             endInterval = null
@@ -280,46 +293,51 @@ class MainFragment : Fragment() {
                 object : DBinserted {
                     override fun onDBinsertFinished() {
                         Log.i("mainQ", "prije selecta")
-                        val Tstart = CalendarToIso(
-                            addTimeToCalendar(
-                                UnixToCalendar(startInterval!!)!!,
-                                0,
-                                0,
-                                -1,
-                                -1,
-                                0,
-                                0
+                        appIsBusy = true;
+                        if (startInterval != null && endInterval != null) {
+                            val Tstart = CalendarToIso(
+                                addTimeToCalendar(
+                                    UnixToCalendar(startInterval!!)!!,
+                                    0,
+                                    0,
+                                    -1,
+                                    -1,
+                                    0,
+                                    0
+                                )
                             )
-                        )
-                        val Tend = CalendarToIso(
-                            addTimeToCalendar(
-                                UnixToCalendar(endInterval!!)!!,
-                                0,
-                                0,
-                                2,
-                                0,
-                                0,
-                                0
+                            val Tend = CalendarToIso(
+                                addTimeToCalendar(
+                                    UnixToCalendar(endInterval!!)!!,
+                                    0,
+                                    0,
+                                    1,
+                                    1,
+                                    0,
+                                    0
+                                )
                             )
-                        )
 
-                        val temp = deviceRepository.deviceDao.getLSfrom(
-                            currentDevice!!.channelId,
-                            currentDevice!!.readAPIkey,
-                            Tstart,
-                            Tend
-                        )
-                        Log.i("mainQ", "temp " + temp.size)
-
-                        LocationDisplayList = temp.toMutableList()
-                        if (LocationDisplayList.size == 0) {
-                            LocationDisplayList = deviceRepository.deviceDao.getLastLSfrom(
+                            val temp = deviceRepository.deviceDao.getLSfrom(
                                 currentDevice!!.channelId,
                                 currentDevice!!.readAPIkey,
+                                Tstart,
                                 Tend
-                            ).toMutableList()
+                            )
+                            Log.i("mainQ", "temp " + temp.size)
+
+                            LocationDisplayList = temp.toMutableList()
+                            if (LocationDisplayList.size == 0) {
+                                LocationDisplayList = deviceRepository.deviceDao.getLastLSfrom(
+                                    currentDevice!!.channelId,
+                                    currentDevice!!.readAPIkey,
+                                    Tend
+                                ).toMutableList()
+                            }
+                            refreshMap()
+                        } else {
+                            appIsBusy = false;
                         }
-                        refreshMap()
                     }
                 }
             DeviceDataFetcher().fetchRecentAndSave(

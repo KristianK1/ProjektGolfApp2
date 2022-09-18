@@ -1,9 +1,8 @@
 package hr.ferit.kristiankliskovic.projektGolf.ui
 
 import android.app.Application
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import hr.ferit.kristiankliskovic.projektGolf.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

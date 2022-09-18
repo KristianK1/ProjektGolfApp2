@@ -4,7 +4,7 @@ import hr.ferit.kristiankliskovic.projektGolf.model.Device
 import hr.ferit.kristiankliskovic.projektGolf.model.LocationSample
 
 class DeviceRepositoryImpl(val deviceDao: DeviceDao): DeviceRepository {
-    override fun delete(device: Device) = deviceDao.delete(device)
+    override fun delete(device: Device) = deviceDao.delete(device.channelId, device.readAPIkey)
     override fun getAllDevices(): List<Device> = deviceDao.getAllDevices()
     override fun save(device: Device) = deviceDao.save(device)
     override fun updatedLastUpdated(timeStamp: String, device: Device) = deviceDao.updatedLastUpdated(timeStamp, device.channelId, device.readAPIkey)

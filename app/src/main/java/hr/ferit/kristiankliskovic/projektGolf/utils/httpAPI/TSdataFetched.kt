@@ -1,4 +1,4 @@
-package hr.ferit.kristiankliskovic.projektGolf.utils
+package hr.ferit.kristiankliskovic.projektGolf.utils.httpAPI
 
 import hr.ferit.kristiankliskovic.projektGolf.model.TSmainClass
 

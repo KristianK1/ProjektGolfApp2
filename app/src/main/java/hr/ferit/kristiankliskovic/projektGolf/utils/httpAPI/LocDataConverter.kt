@@ -1,4 +1,4 @@
-package hr.ferit.kristiankliskovic.projektGolf.utils
+package hr.ferit.kristiankliskovic.projektGolf.utils.httpAPI
 
 import android.util.Log
 import com.google.android.gms.maps.model.LatLng

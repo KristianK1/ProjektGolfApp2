@@ -17,10 +17,10 @@ data class Device(
     var channelId: String,
 
     @ColumnInfo(name="ReadAPIkey")
-    var ReadAPIkey: String,
+    var readAPIkey: String,
 
     @ColumnInfo(name="BT_MAC_address")
-    var BT_MAC_address: String,
+    var bt_MAC_address: String,
 
     @ColumnInfo(name="lastRefreshed")
     var lastRefreshed: String,

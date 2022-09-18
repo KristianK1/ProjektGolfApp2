@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "1034812599440",
+    "firebase_url": "https://projectgolf2-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "projectgolf2",
+    "storage_bucket": "projectgolf2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1034812599440:android:2aae398f13b1a90c2afc15",
+        "android_client_info": {
+          "package_name": "hr.ferit.kristiankliskovic.ProjektGolf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1034812599440-n077hvqqfnhjln29mamngc3iqgf745u2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAM2EM9WQ0cvadOhK8RmLWUU-_NWDadEGc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1034812599440-n077hvqqfnhjln29mamngc3iqgf745u2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1034812599440:android:d2f7f4b6090be8de2afc15",
+        "android_client_info": {
+          "package_name": "hr.ferit.kristiankliskovic.projektGolf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1034812599440-n077hvqqfnhjln29mamngc3iqgf745u2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAM2EM9WQ0cvadOhK8RmLWUU-_NWDadEGc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1034812599440-n077hvqqfnhjln29mamngc3iqgf745u2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

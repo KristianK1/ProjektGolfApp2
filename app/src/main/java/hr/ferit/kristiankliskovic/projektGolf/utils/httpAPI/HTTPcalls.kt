@@ -1,9 +1,7 @@
-package hr.ferit.kristiankliskovic.projektGolf.utils
+package hr.ferit.kristiankliskovic.projektGolf.utils.httpAPI
 
-import android.net.MacAddress
 import android.util.Log
 import com.android.volley.Request
-import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import hr.ferit.kristiankliskovic.projektGolf.mainSomething

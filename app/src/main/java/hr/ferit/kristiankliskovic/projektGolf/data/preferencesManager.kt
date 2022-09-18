@@ -1,17 +1,19 @@
 package hr.ferit.kristiankliskovic.projektGolf.data
 
 import android.content.Context
+import com.google.gson.Gson
 import hr.ferit.kristiankliskovic.projektGolf.mainSomething
+import hr.ferit.kristiankliskovic.projektGolf.model.Device
+import hr.ferit.kristiankliskovic.projektGolf.model.user
 
-class preferencesManager {
+object preferencesManager {
 
-    companion object {
-        const val PREFS_FILE = "MyPreferences"
-        const val PREFS_KEY_CURR_DEVICE = "currDeviceName"
-        const val BASIC_ts_key = "timeStamp_"
-        const val HISTORY_key = "historyValue"
-        const val CHOICE_KEY = "choiceKey"
-    }
+    const val PREFS_FILE = "MyPreferences"
+    const val PREFS_KEY_CURR_DEVICE = "currDeviceName"
+    const val BASIC_ts_key = "timeStamp_"
+    const val HISTORY_key = "historyValue"
+    const val CHOICE_KEY = "choiceKey"
+    const val USER_KEY = "userKey"
 
     fun saveCurrDeviceName(username: String) {
         val sharedPreferences = mainSomething.application.getSharedPreferences(
@@ -27,22 +29,18 @@ class preferencesManager {
             val sharedPreferences = mainSomething.application.getSharedPreferences(
                 PREFS_FILE, Context.MODE_PRIVATE
             )
-            sharedPreferences.getString(
-                hr.ferit.kristiankliskovic.projektGolf.data.preferencesManager.Companion.PREFS_KEY_CURR_DEVICE,
-                ""
-            )!!
+            sharedPreferences.getString(PREFS_KEY_CURR_DEVICE, "")!!
         } catch (e: Throwable) {
             "";
         }
-
     }
 
-    fun saveTimestamp(which: Int, ts1: String) {
+    fun saveTimestamp(which: Int, ts: String) {
         val sharedPreferences = mainSomething.application.getSharedPreferences(
             PREFS_FILE, Context.MODE_PRIVATE
         )
         val editor = sharedPreferences.edit()
-        editor.putString(BASIC_ts_key + which, ts1)
+        editor.putString(BASIC_ts_key + which, ts)
         editor.apply()
     }
 
@@ -97,5 +95,35 @@ class preferencesManager {
         } catch (e: Throwable) {
             -1;
         }
+    }
+
+    fun setUser(user: user) {
+        val sharedPreferences = mainSomething.application.getSharedPreferences(
+            PREFS_FILE, Context.MODE_PRIVATE
+        )
+        val editor = sharedPreferences.edit()
+        editor.putString(USER_KEY, Gson().toJson(user))
+        editor.apply()
+    }
+
+    fun removeUser(){
+        val sharedPreferences = mainSomething.application.getSharedPreferences(
+            PREFS_FILE, Context.MODE_PRIVATE
+        )
+        val editor = sharedPreferences.edit()
+        editor.putString(USER_KEY, "")
+        editor.apply()
+    }
+
+    fun getUser(): user? {
+        var myUser: String? = null
+        try {
+            val sharedPreferences = mainSomething.application.getSharedPreferences(
+                PREFS_FILE, Context.MODE_PRIVATE
+            )
+            myUser = sharedPreferences.getString(USER_KEY, "")!!
+        } catch (e: Throwable) {
+        }
+        return Gson().fromJson(myUser, user::class.java)
     }
 }

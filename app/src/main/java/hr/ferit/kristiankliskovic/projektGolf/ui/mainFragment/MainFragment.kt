@@ -1,7 +1,5 @@
 package hr.ferit.kristiankliskovic.projektGolf.ui.mainFragment
-import android.Manifest
-import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.content.pm.PackageManager
+
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -10,8 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -21,7 +17,6 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.gson.Gson
 import hr.ferit.kristiankliskovic.projektGolf.data.preferencesManager
@@ -30,10 +25,12 @@ import hr.ferit.kristiankliskovic.projektGolf.di.DeviceRepositoryFactory
 import hr.ferit.kristiankliskovic.projektGolf.model.Device
 import hr.ferit.kristiankliskovic.projektGolf.model.LocationSample
 import hr.ferit.kristiankliskovic.projektGolf.utils.*
+import hr.ferit.kristiankliskovic.projektGolf.utils.httpAPI.DBinserted
+import hr.ferit.kristiankliskovic.projektGolf.utils.httpAPI.DeviceDataFetcher
 import java.util.*
 
 
-class MainFragment: Fragment() {
+class MainFragment : Fragment() {
 
     private var appIsBusy: Boolean = false
     private lateinit var binding: MainScreenBinding
@@ -60,22 +57,35 @@ class MainFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+//        val fm: FragmentManager = requireActivity().supportFragmentManager
+//        Log.i("backStack", "" + findNavController().backQueue.size)
+//        for(back in findNavController().backQueue){
+//            Log.i("backStack", back.destination.displayName)
+//            Log.i("backStack", back.id)
+//            Log.i("backStack", back.destination.navigatorName)
+//            if(back.destination.navigatorName == "fragment"){
+//                findNavController().popBackStack(back.destination.id, false)
+//            }
+//        }
+//
+//        Log.i("backStack", "" + findNavController().backQueue.size)
+
         binding = MainScreenBinding.inflate(layoutInflater)
         getSettings()
         binding.btSett.setOnClickListener {
-            if(appIsBusy == false){
+            if (!appIsBusy) {
                 val action = MainFragmentDirections.actionMainFragmentToSettingsFragment()
                 findNavController().navigate(action)
             }
         }
 
-        if(centerMap == true)
+        if (centerMap == true)
             binding.centerView.setBackgroundColor(Color.GREEN)
         else
             binding.centerView.setBackgroundColor(Color.RED)
         binding.centerView.setOnClickListener {
 
-            if(currCenterLocation != null){
+            if (currCenterLocation != null) {
                 centerMap = true
                 liveTracking = centerMap
                 setUpLooper()
@@ -88,7 +98,7 @@ class MainFragment: Fragment() {
             childFragmentManager.findFragmentById(hr.ferit.kristiankliskovic.projektGolf.R.id.google_map) as SupportMapFragment?
 
 
-        supportMapFragment!!.getMapAsync( OnMapReadyCallback(){
+        supportMapFragment!!.getMapAsync(OnMapReadyCallback() {
             onMapReady(it)
         })
 
@@ -96,11 +106,12 @@ class MainFragment: Fragment() {
         return binding.root
     }
 
-    fun setUpLooper(){
-        if(timer != null){
+    fun setUpLooper() {
+
+        if (timer != null) {
             timer.cancel()
         }
-        try{
+        try {
             timer = Timer()
             timer.scheduleAtFixedRate(object : TimerTask() {
                 override fun run() {
@@ -113,7 +124,7 @@ class MainFragment: Fragment() {
 //                Log.i("interval", "catch" + Gson().toJson(this))
 //                Toast.makeText(requireContext(), "CATCH", LENGTH_SHORT)
 //            }
-        } catch (e: Throwable){
+        } catch (e: Throwable) {
 
         }
     }
@@ -121,7 +132,6 @@ class MainFragment: Fragment() {
     override fun onResume() {
         super.onResume()
         setUpLooper()
-
     }
 
     override fun onPause() {
@@ -134,9 +144,7 @@ class MainFragment: Fragment() {
     fun onMapReady(p0: GoogleMap) {
         Log.i("mapTTR", "ready")
         map = p0
-        if(currentDevice != null) {
-
-
+        if (currentDevice != null) {
             map.setOnCameraMoveStartedListener { reason ->
                 if (reason == OnCameraMoveStartedListener.REASON_GESTURE) {
                     Log.i("cameraMap", "onCameraMoveStarted")
@@ -159,20 +167,21 @@ class MainFragment: Fragment() {
 
 //            refreshMap()
         } else
-            try{
+            try {
                 map.clear()
-            } catch( e: Throwable){}
+            } catch (e: Throwable) {
+            }
     }
 
-    fun getSettings(){
+    fun getSettings() {
 
         var Name = "";
-        try{
-            Name = preferencesManager().getCurrDeviceName()
+        try {
+            Name = preferencesManager.getCurrDeviceName()
         } catch (e: Throwable) {
             Log.i("errrS", "FS");
         }
-        if(Name == ""){
+        if (Name == "") {
             Toast.makeText(context, "Nije postavljen uređaj", LENGTH_SHORT).show()
             startInterval = null
             endInterval = null
@@ -186,9 +195,13 @@ class MainFragment: Fragment() {
         val startTime: Long
         val endTime: Long
 
-        val displayChoice: Int = preferencesManager().getChoice()
-        if(displayChoice == 0){
-            Toast.makeText(context, "Nisu postavljeni parametri o dohvaćanju podataka", LENGTH_SHORT).show()
+        val displayChoice: Int = preferencesManager.getChoice()
+        if (displayChoice == 0) {
+            Toast.makeText(
+                context,
+                "Nisu postavljeni parametri o dohvaćanju podataka",
+                LENGTH_SHORT
+            ).show()
             startInterval = null
             endInterval = null
             displayMarkers = false
@@ -196,37 +209,45 @@ class MainFragment: Fragment() {
             binding.centerView.setBackgroundColor(Color.RED);
             return
         }
-        if(displayChoice == 1){
-            val start_sp = preferencesManager().getTimestamp(1)
-            val end_sp = preferencesManager().getTimestamp(2)
-            if(!start_sp.isNullOrEmpty() && !end_sp.isNullOrEmpty()){
+        if (displayChoice == 1) {
+            val start_sp = preferencesManager.getTimestamp(1)
+            val end_sp = preferencesManager.getTimestamp(2)
+            if (!start_sp.isNullOrEmpty() && !end_sp.isNullOrEmpty()) {
                 Log.i("mapSettings_START", start_sp)
                 Log.i("mapSettings_END", end_sp)
                 startInterval = CalendarToUnix(ISOtoCalendar(start_sp))
                 endInterval = CalendarToUnix(ISOtoCalendar(end_sp))
-                Log.i("startIntervalw" , "" + startInterval)
+                Log.i("startIntervalw", "" + startInterval)
                 Log.i("startIntervalw", "" + endInterval)
                 displayMarkers = false
-            }
-            else{
-                Toast.makeText(context, "Nisu postavljeni parametri o dohvaćanju podataka", LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(
+                    context,
+                    "Nisu postavljeni parametri o dohvaćanju podataka",
+                    LENGTH_SHORT
+                ).show()
                 startInterval = null
                 endInterval = null
                 displayMarkers = false
                 return
             }
 
-        }
-        else{
+        } else {
             endInterval = Calendar.getInstance().timeInMillis / 1000
-            startInterval = Calendar.getInstance().timeInMillis / 1000 - historyStringToSeconds(preferencesManager().getHistory())
+            startInterval = Calendar.getInstance().timeInMillis / 1000 - historyStringToSeconds(
+                preferencesManager.getHistory()
+            )
 
             Log.i("startInterval", "" + startInterval)
             Log.i("startInterval", "" + endInterval)
 
             displayMarkers = false
-            if(startInterval == endInterval){
-                Toast.makeText(context, "Nisu postavljeni parametri o dohvaćanju podataka", LENGTH_SHORT).show()
+            if (startInterval == endInterval) {
+                Toast.makeText(
+                    context,
+                    "Nisu postavljeni parametri o dohvaćanju podataka",
+                    LENGTH_SHORT
+                ).show()
                 Log.i("startInterval", "err")
                 startInterval = null
                 endInterval = null
@@ -238,8 +259,8 @@ class MainFragment: Fragment() {
 
     }
 
-    fun updateCurrentDevice(): Device?{
-        val Name = preferencesManager().getCurrDeviceName()
+    fun updateCurrentDevice(): Device? {
+        val Name = preferencesManager.getCurrDeviceName()
 
         Log.i("mainQ", "name " + Name)
         val devices = deviceRepository.deviceDao.getAllDevices()
@@ -251,7 +272,7 @@ class MainFragment: Fragment() {
     private fun refresh() {
 
         Log.i("mainQ", "EO ME")
-        if(currentDevice != null){
+        if (currentDevice != null) {
             appIsBusy = true;
             val tsStart = currentDevice!!.lastRefreshed
             Log.i("dataaa", "since When :" + tsStart)
@@ -259,28 +280,62 @@ class MainFragment: Fragment() {
                 object : DBinserted {
                     override fun onDBinsertFinished() {
                         Log.i("mainQ", "prije selecta")
-                        val Tstart = CalendarToIso(addTimeToCalendar(UnixToCalendar(startInterval!!)!!,0,0,-1,-1,0,0))
-                        val Tend = CalendarToIso(addTimeToCalendar(UnixToCalendar(endInterval!!)!!,0,0,2,0,0,0))
+                        val Tstart = CalendarToIso(
+                            addTimeToCalendar(
+                                UnixToCalendar(startInterval!!)!!,
+                                0,
+                                0,
+                                -1,
+                                -1,
+                                0,
+                                0
+                            )
+                        )
+                        val Tend = CalendarToIso(
+                            addTimeToCalendar(
+                                UnixToCalendar(endInterval!!)!!,
+                                0,
+                                0,
+                                2,
+                                0,
+                                0,
+                                0
+                            )
+                        )
 
-                        val temp = deviceRepository.deviceDao.getLSfrom(currentDevice!!.channelId, currentDevice!!.ReadAPIkey, Tstart, Tend)
+                        val temp = deviceRepository.deviceDao.getLSfrom(
+                            currentDevice!!.channelId,
+                            currentDevice!!.readAPIkey,
+                            Tstart,
+                            Tend
+                        )
                         Log.i("mainQ", "temp " + temp.size)
 
                         LocationDisplayList = temp.toMutableList()
-                        if(LocationDisplayList.size == 0){
-                            LocationDisplayList = deviceRepository.deviceDao.getLastLSfrom(currentDevice!!.channelId, currentDevice!!.ReadAPIkey, Tend).toMutableList()
+                        if (LocationDisplayList.size == 0) {
+                            LocationDisplayList = deviceRepository.deviceDao.getLastLSfrom(
+                                currentDevice!!.channelId,
+                                currentDevice!!.readAPIkey,
+                                Tend
+                            ).toMutableList()
                         }
                         refreshMap()
                     }
                 }
-            DeviceDataFetcher().fetchRecentAndSave(currentDevice!!.channelId, currentDevice!!.ReadAPIkey, tsStart, listener)
+            DeviceDataFetcher().fetchRecentAndSave(
+                currentDevice!!.channelId,
+                currentDevice!!.readAPIkey,
+                tsStart,
+                listener
+            )
         }
     }
 
-    fun refreshMap(){
+    fun refreshMap() {
         updateCurrentDevice()
         getSettings()
 
-        if(startInterval == null) {
+        if (startInterval == null) {
             appIsBusy = false;
             return
         }
@@ -289,19 +344,18 @@ class MainFragment: Fragment() {
 
         var indexOfFirstLocation = -1
         var indexOfLastLocation = 0
-        for((index,LS) in LocationDisplayList.withIndex()){
+        for ((index, LS) in LocationDisplayList.withIndex()) {
             val corrected_UNIX: Long = CalendarToUnix(isostring_toLocalCalendar(LS.created_at))
-            if(corrected_UNIX > startInterval!!){
-                if(corrected_UNIX < endInterval!!){
-                    if(LS.latitude < 89.9 && LS.latitude > -89.9) {
-                        if(indexOfFirstLocation == -1) indexOfFirstLocation = index
+            if (corrected_UNIX > startInterval!!) {
+                if (corrected_UNIX < endInterval!!) {
+                    if (LS.latitude < 89.9 && LS.latitude > -89.9) {
+                        if (indexOfFirstLocation == -1) indexOfFirstLocation = index
                         indexOfLastLocation = index
                         LL.add(LatLng(LS.latitude, LS.longitude))
                         Log.i("convertStuff_1", LS.created_at)
 
                     }
-                }
-                else{
+                } else {
                     break
                 }
             }
@@ -310,37 +364,63 @@ class MainFragment: Fragment() {
         Log.i("justOne", Gson().toJson(LocationDisplayList))
 
         val markers = mutableListOf<MarkerOptions>()
-        if(indexOfFirstLocation == -1) {
+        if (indexOfFirstLocation == -1) {
             var marker: MarkerOptions = MarkerOptions()
-            marker.position(LatLng(LocationDisplayList[LocationDisplayList.size - 1].latitude, LocationDisplayList[LocationDisplayList.size - 1].longitude))
-            marker.title("Točka izvan zadanog intervala " + CalendartoMapMarkerString( isostring_toLocalCalendar(LocationDisplayList[LocationDisplayList.size - 1].created_at)))
+            marker.position(
+                LatLng(
+                    LocationDisplayList[LocationDisplayList.size - 1].latitude,
+                    LocationDisplayList[LocationDisplayList.size - 1].longitude
+                )
+            )
+            marker.title(
+                "Točka izvan zadanog intervala " + CalendartoMapMarkerString(
+                    isostring_toLocalCalendar(LocationDisplayList[LocationDisplayList.size - 1].created_at)
+                )
+            )
             marker.zIndex(0F)
             marker.visible(true)
             markers.add(marker)
-            currCenterLocation = LatLng(LocationDisplayList[LocationDisplayList.size - 1].latitude, LocationDisplayList[LocationDisplayList.size - 1].longitude)
-            if(centerMap == true)
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(currCenterLocation!!,15F), 300,null)
-        }
-        else if(indexOfFirstLocation != indexOfLastLocation){// dvije razlicite lokacije za pocetak i kraj
+            currCenterLocation = LatLng(
+                LocationDisplayList[LocationDisplayList.size - 1].latitude,
+                LocationDisplayList[LocationDisplayList.size - 1].longitude
+            )
+            if (centerMap == true)
+                map.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(currCenterLocation!!, 15F),
+                    300,
+                    null
+                )
+        } else if (indexOfFirstLocation != indexOfLastLocation) {// dvije razlicite lokacije za pocetak i kraj
             var marker: MarkerOptions = MarkerOptions()
             marker.position(LL.first())
-            marker.title("Start point " + CalendartoMapMarkerString( isostring_toLocalCalendar(LocationDisplayList[indexOfFirstLocation].created_at)))
+            marker.title(
+                "Start point " + CalendartoMapMarkerString(
+                    isostring_toLocalCalendar(
+                        LocationDisplayList[indexOfFirstLocation].created_at
+                    )
+                )
+            )
             marker.zIndex(0F)
             marker.visible(true)
             markers.add(marker)
 
             marker = MarkerOptions()
             marker.position(LL.last())
-            marker.title("End point " + CalendartoMapMarkerString(isostring_toLocalCalendar(LocationDisplayList[indexOfLastLocation].created_at)))
+            marker.title(
+                "End point " + CalendartoMapMarkerString(
+                    isostring_toLocalCalendar(
+                        LocationDisplayList[indexOfLastLocation].created_at
+                    )
+                )
+            )
             marker.zIndex(1F)
             marker.visible(true)
             markers.add(marker)
 
             currCenterLocation = LL.last()
-            if(centerMap == true)
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(LL.last(),15F), 300,null)
-        }
-        else if(indexOfFirstLocation == indexOfLastLocation){ //ista lokacija za pocetak i kraj
+            if (centerMap == true)
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(LL.last(), 15F), 300, null)
+        } else if (indexOfFirstLocation == indexOfLastLocation) { //ista lokacija za pocetak i kraj
             var marker: MarkerOptions = MarkerOptions()
             marker.position(LL.first())
             marker.title(CalendartoMapMarkerString(isostring_toLocalCalendar(LocationDisplayList[indexOfLastLocation].created_at)))
@@ -349,8 +429,8 @@ class MainFragment: Fragment() {
             markers.add(marker)
 //            Toast.makeText(requireContext(), "Ne postoje zapisi o lokaciji u odabranom intervalu", LENGTH_SHORT).show()
             currCenterLocation = LL.last()
-            if(centerMap == true)
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(LL.last(),15F), 300,null)
+            if (centerMap == true)
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(LL.last(), 15F), 300, null)
         }
 
 
@@ -360,18 +440,12 @@ class MainFragment: Fragment() {
 
         map.clear()
         map.addPolyline(tankaCrnaLinija)
-        for(marker in markers){
+        for (marker in markers) {
             Log.i("markers", Gson().toJson(marker))
             map.addMarker(marker)
         }
 
         appIsBusy = false;
-    }
-
-    fun test(){
-        val str = "2022-08-06T20:00:01Z";
-        val rez = CalendarToIso(isostring_toLocalCalendar(str))
-        Log.i("testtt", rez)
     }
 
 }

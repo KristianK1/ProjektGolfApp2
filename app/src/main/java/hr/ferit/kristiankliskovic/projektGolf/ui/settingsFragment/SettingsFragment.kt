@@ -20,6 +20,7 @@ import hr.ferit.kristiankliskovic.projektGolf.data.preferencesManager
 import hr.ferit.kristiankliskovic.projektGolf.databinding.FragmentSettingsBinding
 import hr.ferit.kristiankliskovic.projektGolf.di.DeviceRepositoryFactory
 import hr.ferit.kristiankliskovic.projektGolf.model.Device
+import hr.ferit.kristiankliskovic.projektGolf.utils.myUserState
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -63,8 +64,18 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
         binding.date1.setOnClickListener{ pickDate1() }
         binding.date2.setOnClickListener { pickDate2() }
         binding.historyShow.setOnClickListener{ pickHistory() }
-        this.binding.intervalChoice.setOnClickListener { choiceChanged(1) }
-        this.binding.historyChoice.setOnClickListener { choiceChanged(2) }
+        binding.intervalChoice.setOnClickListener { choiceChanged(1) }
+        binding.historyChoice.setOnClickListener { choiceChanged(2) }
+        binding.logoutButton.setOnClickListener{
+            myUserState.logout()
+            val action = SettingsFragmentDirections.actionSettingsFragmentToLoginFragment()
+            findNavController().navigate(action)
+        }
+        binding.deleteUserButton.setOnClickListener{
+            myUserState.deleteUser()
+            val action = SettingsFragmentDirections.actionSettingsFragmentToLoginFragment()
+            findNavController().navigate(action)
+        }
         return binding.root
     }
 
@@ -91,19 +102,22 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
     }
 
     fun getCurrentDevice(): String? {
-        val currDevName = preferencesManager().getCurrDeviceName()
+        val currDevName = preferencesManager.getCurrDeviceName()
         val allDevices = deviceRepository.getAllDevices()
         if(allDevices.filter { o -> o.name == currDevName }.isNotEmpty()) return currDevName
         return null
     }
 
-    fun setCurrentDevice(newName: String){
-        preferencesManager().saveCurrDeviceName(newName)
-        if(newName.isEmpty()){
+    fun setCurrentDevice(newName: String?){
+        if(!newName.isNullOrEmpty()){
+            myUserState.changeDevice(newName)
+        }
+
+        if(myUserState.myDevice == null){
             binding.tvCurrentName.text = "Nema uređaja"
         }
         else{
-            binding.tvCurrentName.text = newName
+            binding.tvCurrentName.text = myUserState.myDevice!!.name
         }
     }
 
@@ -117,7 +131,7 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
                 setCurrentDevice(allDevs[0].name)
             }
             else{
-                setCurrentDevice("")
+                setCurrentDevice(null)
             }
         }
         else{
@@ -136,6 +150,7 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
                         deviceRepository.deviceDao.delete(device)
+                        myUserState.deleteDevice(device.name)
                         deviceRepository.deleteLSfrom(device)
                         updateData()
                     }
@@ -282,10 +297,10 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
         val d2: String
         if(which == 1){
             d1 = date
-            d2 = preferencesManager().getTimestamp(2)
+            d2 = preferencesManager.getTimestamp(2)
         }
         else if (which == 2){
-            d1 = preferencesManager().getTimestamp(1)
+            d1 = preferencesManager.getTimestamp(1)
             d2 = date
         }
         else throw RuntimeException("wrong whichhh")
@@ -298,7 +313,8 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
             return
         }
         showTimeStamp(which, date)
-        preferencesManager().saveTimestamp(which,date);
+        preferencesManager.saveTimestamp(which,date);
+
     }
 
     private fun showTimeStamp(which: Int, dateStr: String) {
@@ -322,8 +338,8 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
     }
 
     private fun showTimestamps(){
-        showTimeStamp(1, preferencesManager().getTimestamp(1))
-        showTimeStamp(2, preferencesManager().getTimestamp(2))
+        showTimeStamp(1, preferencesManager.getTimestamp(1))
+        showTimeStamp(2, preferencesManager.getTimestamp(2))
     }
 
     private fun pickHistory() {
@@ -332,25 +348,25 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
         builder.setItems(history_modes, DialogInterface.OnClickListener { dialog, which ->
             val chosen = history_modes[which];
             this.binding.historyShow.text = chosen
-            preferencesManager().setHistory(chosen)
+            preferencesManager.setHistory(chosen)
         })
         builder.show()
     }
 
 
     private fun showHistory() {
-        var setable = preferencesManager().getHistory()
+        var setable = preferencesManager.getHistory()
         if(setable.isEmpty() ) setable =  "Enter history"
         this.binding.historyShow.text = setable
     }
 
     private fun choiceChanged(which: Int) {
-        preferencesManager().setChoice(which)
+        preferencesManager.setChoice(which)
         printChoice(which)
     }
 
     private fun getChoice(){
-        val cc = preferencesManager().getChoice()
+        val cc = preferencesManager.getChoice()
         if(cc == 1 || cc == 2)
             printChoice(cc)
     }

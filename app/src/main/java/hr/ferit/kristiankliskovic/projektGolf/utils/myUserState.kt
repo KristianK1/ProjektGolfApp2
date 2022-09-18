@@ -68,6 +68,9 @@ object myUserState {
                 myDevice = myUser!!.devices[0]
                 preferencesManager.saveCurrDeviceName(myDevice!!.name)
             }
+            if(myDevice == null){
+                preferencesManager.saveCurrDeviceName("")
+            }
         }
         Log.i("loginX", "prije resetSetting grananja")
         if (resetSettings) {

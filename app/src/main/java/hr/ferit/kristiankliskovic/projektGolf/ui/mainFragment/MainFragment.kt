@@ -41,7 +41,6 @@ class MainFragment : Fragment() {
     private var timer: Timer = Timer()
     private lateinit var map: GoogleMap
     private val deviceRepository = DeviceRepositoryFactory.deviceRepository
-    private var currentDevice: Device? = updateCurrentDevice()
     private var LocationDisplayList: MutableList<LocationSample> = mutableListOf()
 
     private var startInterval: Long? = null
@@ -65,14 +64,20 @@ class MainFragment : Fragment() {
         getSettings()
         binding.btSett.setOnClickListener {
             if (!appIsBusy) {
-                val action = MainFragmentDirections.actionMainFragmentToSettingsFragment()
-                findNavController().navigate(action)
+                try {
+                    val action = MainFragmentDirections.actionMainFragmentToSettingsFragment()
+                    findNavController().navigate(action)
+                } catch (e: Throwable) {
+                }
             }
         }
         binding.bluetoothBT.setOnClickListener {
             if (!appIsBusy) {
-                val action = MainFragmentDirections.actionMainFragmentToBluetoothFragment()
-                findNavController().navigate(action)
+                try {
+                    val action = MainFragmentDirections.actionMainFragmentToBluetoothFragment()
+                    findNavController().navigate(action)
+                } catch (e: Throwable) {
+                }
             }
         }
 
@@ -99,12 +104,10 @@ class MainFragment : Fragment() {
             onMapReady(it)
         })
 
-        currentDevice = updateCurrentDevice()
         return binding.root
     }
 
     fun setUpLooper() {
-
         if (timer != null) {
             timer.cancel()
         }
@@ -113,7 +116,9 @@ class MainFragment : Fragment() {
             timer.scheduleAtFixedRate(object : TimerTask() {
                 override fun run() {
                     Log.i("interval", "This function is called every 10 seconds.")
-                    refresh()
+                    if(!appIsBusy){
+                        refresh()
+                    }
                 }
             }, 0, 10000)
 
@@ -156,7 +161,7 @@ class MainFragment : Fragment() {
             }
         }
         map.isMyLocationEnabled = true
-        if (currentDevice != null) {
+        if (myUserState.myDevice != null) {
             map.setOnCameraMoveStartedListener { reason ->
                 if (reason == OnCameraMoveStartedListener.REASON_GESTURE) {
                     Log.i("cameraMap", "onCameraMoveStarted")
@@ -272,23 +277,18 @@ class MainFragment : Fragment() {
 
     }
 
-    fun updateCurrentDevice(): Device? {
-        val Name = preferencesManager.getCurrDeviceName()
-
-        Log.i("mainQ", "name " + Name)
-        val devices = deviceRepository.deviceDao.getAllDevices()
-        val curr = devices.find { o -> o.name == Name }
-        Log.i("mainQ", "device " + Gson().toJson(currentDevice))
-        return curr
-    }
 
     private fun refresh() {
 
         Log.i("mainQ", "EO ME")
-        if (currentDevice != null) {
+        Log.i("mainQ", Gson().toJson(myUserState.myUser))
+        Log.i("mainQ", Gson().toJson(myUserState.myDevice))
+
+        if (myUserState.myDevice != null) {
             appIsBusy = true;
-            val tsStart = currentDevice!!.lastRefreshed
-            Log.i("dataaa", "since When :" + tsStart)
+//            val tsStart = myUserState.myDevice!!.lastRefreshed
+            val tsStart = deviceRepository.getAllDevices().find { o -> o.name == myUserState.myDevice!!.name }!!.lastRefreshed
+            Log.i("dataaa", "since When :$tsStart")
             val listener: DBinserted =
                 object : DBinserted {
                     override fun onDBinsertFinished() {
@@ -319,8 +319,8 @@ class MainFragment : Fragment() {
                             )
 
                             val temp = deviceRepository.deviceDao.getLSfrom(
-                                currentDevice!!.channelId,
-                                currentDevice!!.readAPIkey,
+                                myUserState.myDevice!!.channelId,
+                                myUserState.myDevice!!.readAPIkey,
                                 Tstart,
                                 Tend
                             )
@@ -329,8 +329,8 @@ class MainFragment : Fragment() {
                             LocationDisplayList = temp.toMutableList()
                             if (LocationDisplayList.size == 0) {
                                 LocationDisplayList = deviceRepository.deviceDao.getLastLSfrom(
-                                    currentDevice!!.channelId,
-                                    currentDevice!!.readAPIkey,
+                                    myUserState.myDevice!!.channelId,
+                                    myUserState.myDevice!!.readAPIkey,
                                     Tend
                                 ).toMutableList()
                             }
@@ -341,8 +341,8 @@ class MainFragment : Fragment() {
                     }
                 }
             DeviceDataFetcher().fetchRecentAndSave(
-                currentDevice!!.channelId,
-                currentDevice!!.readAPIkey,
+                myUserState.myDevice!!.channelId,
+                myUserState.myDevice!!.readAPIkey,
                 tsStart,
                 listener
             )
@@ -350,7 +350,6 @@ class MainFragment : Fragment() {
     }
 
     fun refreshMap() {
-        updateCurrentDevice()
         getSettings()
 
         if (startInterval == null) {

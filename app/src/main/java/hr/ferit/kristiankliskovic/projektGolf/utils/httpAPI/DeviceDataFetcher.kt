@@ -9,6 +9,7 @@ import hr.ferit.kristiankliskovic.projektGolf.model.TSmainClass
 import hr.ferit.kristiankliskovic.projektGolf.utils.genericListener
 import hr.ferit.kristiankliskovic.projektGolf.utils.*
 import java.util.*
+import kotlin.math.absoluteValue
 
 class DeviceDataFetcher {
     val gson = Gson()
@@ -111,28 +112,68 @@ class DeviceDataFetcher {
         Log.i("dataaa", "modifiredTime" + startTimeStampMOdified)
 
         val randGenerator = Random(Calendar.getInstance().timeInMillis)
-        val randSeconds = randGenerator.nextInt()%60;
-        val randMinutes = randGenerator.nextInt()%60 + 10;
-        val randHours = randGenerator.nextInt()%24 + 10;
-        val randDay =  randGenerator.nextInt()%28 + 10;
-        val randMonth =  randGenerator.nextInt()%12 + 10;
+        Log.i("dataaa", "hello1")
 
-        var secondsString = randSeconds.toString()
-        if(secondsString.length == 1) secondsString = "0$secondsString"
+        val randSeconds = randGenerator.nextInt()%60
+        Log.i("dataaa", "hello2")
+        val randMinutes = randGenerator.nextInt()%60
+        val randHours = randGenerator.nextInt()%24
+        val randDay =  randGenerator.nextInt()%28 + 1
+        val randMonth =  randGenerator.nextInt()%12 + 1
+        Log.i("dataaa", "hello3")
 
-        var minutesString = randMinutes.toString()
-        if(minutesString.length == 1) minutesString = "0$minutesString"
+        var secondsString = randSeconds.absoluteValue.toString()
+        while(secondsString.length < 2) {
+            Log.i("dataaa", "hello33")
+            Log.i("dataaa", "sekunde" + secondsString)
 
-        var hourString = randHours.toString()
-        if(hourString.length == 1) hourString = "0$hourString"
+            secondsString = "0$secondsString"
+        }
+        Log.i("dataaa", "sekunde" + secondsString)
 
-        var dayString = randDay.toString()
-        if(dayString.length == 1) dayString = "0$dayString"
+        Log.i("dataaa", "hello4")
 
-        var monthString = randMonth.toString()
-        if(monthString.length == 1) monthString = "0$monthString"
+        var minutesString = randMinutes.absoluteValue.toString()
+        while(minutesString.length < 2) {
+            Log.i("dataaa", "hello44")
+            Log.i("dataaa", "minute" + minutesString)
+            minutesString = "0$minutesString"
+        }
+        Log.i("dataaa", "minute" + minutesString)
 
-        val endTime = "2100-$monthString-${dayString}T$hourString:$randMinutes:${randSeconds}Z"
+        Log.i("dataaa", "hello5")
+
+        var hourString = randHours.absoluteValue.toString()
+        while(hourString.length < 2){
+            Log.i("dataaa", "hello55")
+            Log.i("dataaa", "sati" + hourString)
+            hourString = "0$hourString"
+        }
+        Log.i("dataaa", "sati" + hourString)
+
+        Log.i("dataaa", "hello6")
+
+        var dayString = randDay.absoluteValue.toString()
+        while(dayString.length < 2) {
+            Log.i("dataaa", "hello66")
+            Log.i("dataaa", "dan" + dayString)
+            dayString = "0$dayString"
+        }
+        Log.i("dataaa", "dan" + dayString)
+
+        Log.i("dataaa", "hello7")
+
+        var monthString = randMonth.absoluteValue.toString()
+        while(monthString.length < 2){
+            Log.i("dataaa", "hello77")
+            Log.i("dataaa", "mjesec" + monthString)
+            monthString = "0$monthString"
+        }
+        Log.i("dataaa", "mjesec" + monthString)
+
+        val endTime = "2100-$monthString-${dayString}T$hourString:$minutesString:${secondsString}Z"
+
+        Log.i("dataaa", endTime)
         Log.i("dataaa update", "started Save")
         val listener2: TSdataFetched = object : TSdataFetched {
             override fun onDataRecived(data: TSmainClass) {

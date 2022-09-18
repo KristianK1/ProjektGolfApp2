@@ -77,6 +77,10 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
             val action = SettingsFragmentDirections.actionSettingsFragmentToLoginFragment()
             findNavController().navigate(action)
         }
+        binding.navToChangePass.setOnClickListener {
+            val action = SettingsFragmentDirections.actionSettingsFragmentToChangePasswordFragment()
+            findNavController().navigate(action)
+        }
         return binding.root
     }
 

@@ -9,35 +9,32 @@
         android:id="@+id/logoutButton"
         android:layout_width="0px"
         android:layout_height="200px"
-        android:text="Logout"
-        app:layout_constraintEnd_toEndOf="@id/buttonDivider"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="20px"
-        />
-
-    <TextView
-        android:id="@+id/buttonDivider"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text=""
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Logout"
+        app:layout_constraintEnd_toStartOf="@id/deleteUserButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
     <Button
         android:id="@+id/deleteUserButton"
-        android:layout_width="0px"
+        android:layout_width="wrap_content"
         android:layout_height="200px"
+        android:layout_margin="20px"
         android:text="Delete user"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/buttonDivider"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="20px"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/navToChangePass"
+        android:layout_width="0px"
+        android:layout_height="200px"
+        android:layout_margin="20px"
+        android:text="Change password"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/deleteUserButton"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/intervalLayout"

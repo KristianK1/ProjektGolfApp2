@@ -29,7 +29,7 @@ object myUserState {
                     login(user, false, listener)
                 }
             }
-            if(found == false){
+            if(!found){
                 logout()
                 listener.callEnded()
             }
@@ -192,6 +192,12 @@ object myUserState {
         if(myDevice?.name == deviceName){
             myDevice = null
         }
+        firebaseComm.changeUser(myUser!!)
+    }
+
+    fun changePassword(newPass: String){
+        myUser!!.password = newPass
+        preferencesManager.setUser(myUser!!)
         firebaseComm.changeUser(myUser!!)
     }
 }

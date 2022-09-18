@@ -20,6 +20,9 @@
 
             app:popUpToInclusive="true"
             />
+        <action
+            android:id="@+id/action_settingsFragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
     </fragment>
     <fragment
         android:id="@+id/addNewDeviceFragment"
@@ -74,4 +77,10 @@
         android:name="hr.ferit.kristiankliskovic.projektGolf.ui.bluetoothFragment.bluetoothFragment"
         android:label="bluetoothFragment"
         tools:layout="@layout/bluetoothscreen"/>
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="hr.ferit.kristiankliskovic.projektGolf.ui.changePaswordFragment.changePasswordFragment"
+        android:label="changePasswordFragment"
+        tools:layout="@layout/change_password_layout"
+        />
 </navigation>

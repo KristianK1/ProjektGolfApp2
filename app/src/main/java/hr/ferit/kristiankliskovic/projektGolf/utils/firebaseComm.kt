@@ -29,21 +29,16 @@ object firebaseComm {
                 try {
                     val value = snapshot.value
                     val jsonValue = Gson().toJson(value)
-                    Log.i("firebaseJson", jsonValue)
                     val builder = GsonBuilder()
                     builder.setPrettyPrinting()
                     val res = builder.create().fromJson(jsonValue, Array<user>::class.java)
                     users.clear()
                     users.addAll(res)
-                    Log.i("firebaseJson", Gson().toJson(res))
 
                 } catch (e: Throwable) {
                     users = arrayListOf()
                 }
 
-                for (it in users) {
-                    Log.i("usersList", it.username + " " + it.password)
-                }
                 if(firstRun){
                     firstRun = false
                     firebaseReady.value = true

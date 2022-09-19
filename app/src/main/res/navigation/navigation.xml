@@ -17,12 +17,14 @@
             android:id="@+id/action_settingsFragment_to_loginFragment"
             app:destination="@id/loginFragment"
             app:popUpTo="@id/mainFragment"
-
             app:popUpToInclusive="true"
             />
         <action
             android:id="@+id/action_settingsFragment_to_changePasswordFragment"
             app:destination="@id/changePasswordFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_deleteUserFragment"
+            app:destination="@id/deleteUserFragment" />
     </fragment>
     <fragment
         android:id="@+id/addNewDeviceFragment"
@@ -83,4 +85,17 @@
         android:label="changePasswordFragment"
         tools:layout="@layout/change_password_layout"
         />
+    <fragment
+        android:id="@+id/deleteUserFragment"
+        android:name="hr.ferit.kristiankliskovic.projektGolf.ui.deleteuserFragment.deleteUserFragment"
+        android:label="deleteUserFragment"
+        tools:layout="@layout/deleteuserlayout"
+        >
+        <action
+            android:id="@+id/action_deleteUserFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/deleteUserFragment"
+            app:popUpToInclusive="true"
+            />
+    </fragment>
 </navigation>

@@ -68,13 +68,23 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
         binding.intervalChoice.setOnClickListener { choiceChanged(1) }
         binding.historyChoice.setOnClickListener { choiceChanged(2) }
         binding.logoutButton.setOnClickListener{
-            myUserState.logout()
-            val action = SettingsFragmentDirections.actionSettingsFragmentToLoginFragment()
-            findNavController().navigate(action)
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Jeste li sigurni da se želite odjaviti?")
+            builder.setItems(  arrayOf("Da", "Ne"),
+                DialogInterface.OnClickListener { dialog, which ->
+                    if (which == 0) {
+                        myUserState.logout()
+                        Toast.makeText(context, "Uspješno ste se odjavili", Toast.LENGTH_SHORT)
+                            .show()
+                        val action =
+                            SettingsFragmentDirections.actionSettingsFragmentToLoginFragment()
+                        findNavController().navigate(action)
+                    }
+                })
+            builder.show()
         }
         binding.deleteUserButton.setOnClickListener{
-            myUserState.deleteUser()
-            val action = SettingsFragmentDirections.actionSettingsFragmentToLoginFragment()
+            val action = SettingsFragmentDirections.actionSettingsFragmentToDeleteUserFragment()
             findNavController().navigate(action)
         }
         binding.navToChangePass.setOnClickListener {

@@ -13,8 +13,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import hr.ferit.kristiankliskovic.projektGolf.databinding.BluetoothscreenBinding
+import hr.ferit.kristiankliskovic.projektGolf.mainSomething
+import hr.ferit.kristiankliskovic.projektGolf.ui.MainActivity
 import hr.ferit.kristiankliskovic.projektGolf.utils.myUserState
 import java.util.*
 
@@ -30,6 +33,8 @@ class bluetoothFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         binding = BluetoothscreenBinding.inflate(layoutInflater)
+        requestPermission(arrayOf(Manifest.permission.BLUETOOTH_CONNECT),
+            MainActivity.BLUETOOTH_PERMISSION_CODE)
 
         binding.sendBTT1.setOnClickListener {
             if (Bluetooth_uuid != null){
@@ -64,8 +69,19 @@ class bluetoothFragment : Fragment() {
         return binding.root
     }
 
+    fun requestPermission(permissions: Array<String>, requestCode: Int) {
+        Log.i("perms", "here i am")
+        if (ContextCompat.checkSelfPermission(MainActivity.activity,
+                permissions[0]) == PackageManager.PERMISSION_DENIED
+        ) {
+            // Requesting the permission
+            ActivityCompat.requestPermissions(MainActivity.activity, permissions, requestCode)
+        }
+    }
+
     fun BTsend(send: String) {
         Log.i("btFind", "hello");
+
         try {
             var bt_adresa: String
 //        val btManager: BluetoothManager? = getSystemService(BluetoothManager::class.java)

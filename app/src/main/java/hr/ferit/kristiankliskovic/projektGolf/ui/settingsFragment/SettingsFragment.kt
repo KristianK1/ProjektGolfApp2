@@ -358,7 +358,7 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
 
     private fun pickHistory() {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Pick a color")
+        builder.setTitle("Choose history interval")
         builder.setItems(history_modes, DialogInterface.OnClickListener { dialog, which ->
             val chosen = history_modes[which];
             this.binding.historyShow.text = chosen

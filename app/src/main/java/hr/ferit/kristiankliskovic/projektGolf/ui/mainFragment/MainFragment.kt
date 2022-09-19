@@ -10,7 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -25,8 +27,10 @@ import com.google.gson.Gson
 import hr.ferit.kristiankliskovic.projektGolf.data.preferencesManager
 import hr.ferit.kristiankliskovic.projektGolf.databinding.MainScreenBinding
 import hr.ferit.kristiankliskovic.projektGolf.di.DeviceRepositoryFactory
+import hr.ferit.kristiankliskovic.projektGolf.mainSomething
 import hr.ferit.kristiankliskovic.projektGolf.model.Device
 import hr.ferit.kristiankliskovic.projektGolf.model.LocationSample
+import hr.ferit.kristiankliskovic.projektGolf.ui.MainActivity
 import hr.ferit.kristiankliskovic.projektGolf.utils.*
 import hr.ferit.kristiankliskovic.projektGolf.utils.httpAPI.DBinserted
 import hr.ferit.kristiankliskovic.projektGolf.utils.httpAPI.DeviceDataFetcher
@@ -62,6 +66,8 @@ class MainFragment : Fragment() {
 
         binding = MainScreenBinding.inflate(layoutInflater)
         getSettings()
+        requestPermission(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            MainActivity.LOCATION_PERMISSION_CODE)
         binding.btSett.setOnClickListener {
             if (!appIsBusy) {
                 try {
@@ -116,7 +122,7 @@ class MainFragment : Fragment() {
             timer.scheduleAtFixedRate(object : TimerTask() {
                 override fun run() {
                     Log.i("interval", "This function is called every 10 seconds.")
-                    if(!appIsBusy){
+                    if (!appIsBusy) {
                         refresh()
                     }
                 }
@@ -143,24 +149,18 @@ class MainFragment : Fragment() {
     }
 
 
+    @Suppress("DEPRECATION")
     fun onMapReady(p0: GoogleMap) {
         Log.i("mapTTR", "ready")
         map = p0
         if (ActivityCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
                 requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
         ) {
-            val should = ActivityCompat.shouldShowRequestPermissionRationale(
-                requireActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-            if (should) {
-                map.isMyLocationEnabled = true
-                map.uiSettings.isMyLocationButtonEnabled = true
-            }
+            map.isMyLocationEnabled = true
         }
-        map.isMyLocationEnabled = true
+
         if (myUserState.myDevice != null) {
             map.setOnCameraMoveStartedListener { reason ->
                 if (reason == OnCameraMoveStartedListener.REASON_GESTURE) {
@@ -172,17 +172,6 @@ class MainFragment : Fragment() {
                     binding.centerView.setBackgroundColor(Color.RED)
                 }
             }
-//
-//            binding.mapContainer.setOnTouchListener(object: View.OnTouchListener{
-//                override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
-//                    if(p1?.action == MotionEvent.ACTION_DOWN){
-//                        Log.i("cameraMap", "touched")
-//                    }
-//                    return p0?.onTouchEvent(p1)?: true
-//                }
-//            })
-
-//            refreshMap()
         } else
             try {
                 map.clear()
@@ -207,6 +196,7 @@ class MainFragment : Fragment() {
             currCenterLocation = null
             appIsBusy = false
             binding.centerView.setBackgroundColor(Color.RED);
+            map?.clear()
             return
         }
 
@@ -287,7 +277,8 @@ class MainFragment : Fragment() {
         if (myUserState.myDevice != null) {
             appIsBusy = true;
 //            val tsStart = myUserState.myDevice!!.lastRefreshed
-            val tsStart = deviceRepository.getAllDevices().find { o -> o.name == myUserState.myDevice!!.name }!!.lastRefreshed
+            val tsStart = deviceRepository.getAllDevices()
+                .find { o -> o.name == myUserState.myDevice!!.name }!!.lastRefreshed
             Log.i("dataaa", "since When :$tsStart")
             val listener: DBinserted =
                 object : DBinserted {
@@ -351,6 +342,11 @@ class MainFragment : Fragment() {
 
     fun refreshMap() {
         getSettings()
+
+        map.isMyLocationEnabled = ActivityCompat.checkSelfPermission(requireContext(),
+            Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
         if (startInterval == null) {
             appIsBusy = false;
@@ -463,6 +459,16 @@ class MainFragment : Fragment() {
         }
 
         appIsBusy = false;
+    }
+
+    fun requestPermission(permissions: Array<String>, requestCode: Int) {
+        Log.i("perms", "here i am")
+        if (ContextCompat.checkSelfPermission(MainActivity.activity,
+                permissions[0]) == PackageManager.PERMISSION_DENIED
+        ) {
+            // Requesting the permission
+            ActivityCompat.requestPermissions(MainActivity.activity, permissions, requestCode)
+        }
     }
 
 }

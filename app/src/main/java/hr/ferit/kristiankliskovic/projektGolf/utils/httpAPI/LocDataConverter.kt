@@ -28,14 +28,16 @@ class locDataConverter {
             val locsStrings = TSentry.field1!!.split("*")
             for ((index, codedLoc) in locsStrings.withIndex()){
                 val decodedLocation = shortLocationStringToCoors(codedLoc)
-                val LS = LocationSample( "" + TSobj.channel.id, APIkey, TSentry.entry_id, TSentry.created_at, decodedLocation.longitude, decodedLocation.latitude, -1.0, index == locsStrings.size - 1, index)
-                LSlist.add(LS)
+                if(decodedLocation != null){
+                    val LS = LocationSample( "" + TSobj.channel.id, APIkey, TSentry.entry_id, TSentry.created_at, decodedLocation.longitude, decodedLocation.latitude, -1.0, index == locsStrings.size - 1, index)
+                    LSlist.add(LS)
+                }
             }
         }
         return LSlist
     }
 
-    fun shortLocationStringToCoors(input: String): LatLng{
+    fun shortLocationStringToCoors(input: String): LatLng?{
 
         val base = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.:"
         //velicina paketa 11 charova, ponekad 10
@@ -44,11 +46,11 @@ class locDataConverter {
         //velicina paketa 11 charova, ponekad 10
         //zadnji char je onaj dodatni character
         if (!(input.length == 11 || input.length == 10 || input.length == 1)) {
-            return LatLng(90.0,180.0)
+            return null
         }
         if (input.length == 1) {
           //  Log.i("konvertTT", input)
-            return LatLng(90.0,180.0)
+            return null
         }
 
         var binary = ""

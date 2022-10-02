@@ -324,7 +324,9 @@ class MainFragment : Fragment() {
                                     myUserState.myDevice!!.readAPIkey,
                                     Tend
                                 ).toMutableList()
+                                Log.i("mainQ", "just one")
                             }
+
                             refreshMap()
                         } else {
                             appIsBusy = false;
@@ -364,6 +366,7 @@ class MainFragment : Fragment() {
                     if (LS.latitude < 89.9 && LS.latitude > -89.9) {
                         if (indexOfFirstLocation == -1) indexOfFirstLocation = index
                         indexOfLastLocation = index
+                        Log.i("polylinee", "${LS.latitude} ${LS.longitude}")
                         LL.add(LatLng(LS.latitude, LS.longitude))
                         Log.i("convertStuff_1", LS.created_at)
 

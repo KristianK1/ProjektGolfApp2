@@ -19,8 +19,6 @@ object firebaseComm {
     var firstRun = true;
 
     init {
-        Log.i("firebaseEE", "prije inita")
-
         database = FirebaseDatabase.getInstance().reference
 
         database.child("users").addValueEventListener(object : ValueEventListener {
@@ -47,7 +45,7 @@ object firebaseComm {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.i("firebaseIspis", "cenceled...")
+                Log.i("firebaseIspis", "canceled...")
             }
         })
 
@@ -58,7 +56,6 @@ object firebaseComm {
     }
 
     fun checkCreds(user: user): user? {
-        Log.i("firebaseIspis", Gson().toJson(users));
         for (it in users) {
             if (it.username == user.username && it.password == user.password) {
                 return it
@@ -75,10 +72,8 @@ object firebaseComm {
         for(devs in user.devices){
             devs.lastRefreshed = ""
         }
-        Log.i("changeUser", Gson().toJson(user))
         for ((index, value) in users.withIndex()) {
             if (value.username == user.username) {
-                Log.i("changeUser", value.username)
                 database.child("users/$index").setValue(user)
             }
         }

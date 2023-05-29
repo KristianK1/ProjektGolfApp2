@@ -19,7 +19,7 @@ class locDataConverter {
     fun TSobjectToLocationSamples_s(TSobj: TSmainClass, APIkey: String): MutableList<LocationSample>{
         val LSlist: MutableList<LocationSample> = arrayListOf()
         for((index, TSentry) in TSobj.feeds.withIndex()){
-            if(TSentry.field1.isNullOrEmpty()) continue
+            if(TSentry.field1.isNullOrEmpty() || TSentry.field1?.length!! < 5 ) continue
             if(index > 1) {
                 if(TSentry.field1 == TSobj.feeds[index-1].field1){
                     continue

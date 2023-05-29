@@ -59,8 +59,6 @@ fun isostring_toLocalCalendar(iso: String): Calendar {
         val offsetHours = formattedDate.subSequence(20, 22).toString().toInt()
         val offsetMinutes = formattedDate.subSequence(22, 24).toString().toInt()
 
-        Log.i("dayLight", "year: $yyyy $MM $dd || $HH $mm $ss || $offsetHours $offsetMinutes")
-
         result = Calendar.getInstance().apply {
             set(Calendar.YEAR, yyyy)
             set(Calendar.MONTH, MM - 1)

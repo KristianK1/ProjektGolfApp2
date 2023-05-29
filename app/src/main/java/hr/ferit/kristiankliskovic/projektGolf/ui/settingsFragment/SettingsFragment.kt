@@ -91,6 +91,17 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
             val action = SettingsFragmentDirections.actionSettingsFragmentToChangePasswordFragment()
             findNavController().navigate(action)
         }
+
+        binding.resetInterval1.setOnClickListener {
+            setIntervalTimestamp(1,"");
+            binding.date1.setText("Enter interval start");
+        }
+
+        binding.resetInterval2.setOnClickListener {
+            setIntervalTimestamp(2,"");
+            binding.date1.setText("Enter interval end");
+        }
+
         return binding.root
     }
 

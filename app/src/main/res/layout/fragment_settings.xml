@@ -11,6 +11,7 @@
         android:layout_height="200px"
         android:layout_margin="20px"
         android:text="Logout"
+        android:textSize="15dp"
         app:layout_constraintEnd_toStartOf="@id/deleteUserButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,6 +23,7 @@
         android:layout_height="200px"
         android:layout_margin="20px"
         android:text="Delete user"
+        android:textSize="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -32,6 +34,7 @@
         android:layout_height="200px"
         android:layout_margin="20px"
         android:text="Change password"
+        android:textSize="13dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/deleteUserButton"
         app:layout_constraintTop_toTopOf="parent" />
@@ -39,7 +42,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/intervalLayout"
         android:layout_width="match_parent"
-        android:layout_height="190dp"
+        android:layout_height="170dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/deleteUserButton">
 
@@ -57,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:text="Interval"
             android:textSize="30dp"
             app:layout_constraintStart_toEndOf="@id/intervalSideView"
@@ -77,6 +80,19 @@
             app:layout_constraintStart_toEndOf="@id/intervalSideView"
             app:layout_constraintTop_toBottomOf="@id/intervalChoice" />
 
+        <Button
+            android:id="@+id/resetInterval1"
+            android:layout_width="100dp"
+            android:layout_height="45dp"
+            android:text="Reset"
+            android:textSize="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/date1"
+            app:layout_constraintBottom_toBottomOf="@id/date1"
+            android:layout_marginHorizontal="20px"
+            />
+
+
 
         <TextView
             android:id="@+id/date2"
@@ -90,13 +106,26 @@
             app:layout_constraintTop_toBottomOf="@id/date1" />
 
 
+        <Button
+            android:id="@+id/resetInterval2"
+            android:layout_width="100dp"
+            android:layout_height="45dp"
+            android:text="Reset"
+            android:textSize="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/date2"
+            app:layout_constraintBottom_toBottomOf="@id/date2"
+            android:layout_marginHorizontal="20px"
+            />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/historyLayout"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="70dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/intervalLayout">
 
@@ -109,19 +138,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
         <CheckBox
             android:id="@+id/historyChoice"
             style="@android:style/Widget.DeviceDefault.Light.CompoundButton.RadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
             android:clickable="false"
             android:text="History"
             android:textSize="30dp"
             app:layout_constraintStart_toEndOf="@id/historySideView"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
             android:id="@+id/history_show"
@@ -129,12 +158,13 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="12dp"
             android:text="Enter history "
             android:textSize="30dp"
 
-            app:layout_constraintStart_toEndOf="@id/historySideView"
-            app:layout_constraintTop_toBottomOf="@id/historyChoice" />
+            app:layout_constraintStart_toEndOf="@id/historyChoice"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -164,9 +194,30 @@
         android:layout_margin="20dp"
         android:text="SB 160 GJ"
         android:textSize="30dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_current_label" />
+        app:layout_constraintStart_toEndOf="@id/tv_current_label"
 
+        app:layout_constraintTop_toBottomOf="@id/historyLayout" />
+
+
+    <View
+        android:id="@+id/blackLine2"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_current_label"
+        android:layout_marginVertical="15dp"/>
+
+    <TextView
+        android:id="@+id/tv_list_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:clickable="false"
+        android:text="Lista vaših uređaja:"
+        android:textSize="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/blackLine2" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_devices"
@@ -174,11 +225,12 @@
 
         android:layout_height="0px"
         android:layout_marginTop="12dp"
+        android:layout_marginLeft="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
 
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_current_name" />
+        app:layout_constraintTop_toBottomOf="@id/tv_list_name" />
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

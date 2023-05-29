@@ -59,7 +59,7 @@
             style="@android:style/Widget.DeviceDefault.Light.CompoundButton.RadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
+            android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
             android:text="Interval"
             android:textSize="30dp"

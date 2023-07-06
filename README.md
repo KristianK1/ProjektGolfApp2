@@ -60,7 +60,7 @@ Change password screen:
 
 Add device screen:
 
-To add a device you need devices credentials.
+To add a device you need devices credentials. Until you add a device you can't see anything on the main screen.
 
 To obtain the credentials, it is necessary to contact Kristian directly.
 The information linked to these credentials includes the location data of Kristian's car as well as the historical records of the car's whereabouts.

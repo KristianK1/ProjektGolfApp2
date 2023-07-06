@@ -26,13 +26,21 @@ Every time that a user interacts with the map by zooming in/out or moving the ma
 Settings screen:
 
 There are several things that a user can do in the settings screen:
+
     - logout
+    
     - delete user (separate screen)
+   
     - change password (separate screen)
+    
     - select time interval for car path for the main screen:
+    
         - certain time from current moment (1 minute to 180 days)
+        
         - select timestamp of start and end
+   
     - select what cars location to you want to see in the main screen (can have unlimited cars, altough only 2 cars atm have that kind of a device)
+    
     - navigate to add new device screen    
 
 ![Settings screen](/screenshots/PG2_settings.jpg)

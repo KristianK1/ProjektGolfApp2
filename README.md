@@ -35,9 +35,9 @@ There are several things that a user can do in the settings screen:
     
     - select time interval for car path for the main screen:
     
-        - certain time from current moment (1 minute to 180 days)
+        - certain time from current moment (10 minutes to 180 days) (screenshot at the end)
         
-        - select timestamp of start and end
+        - select timestamp of start and end  (screenshot at the end)
    
     - select what cars location to you want to see in the main screen (can have unlimited cars, altough only 2 cars atm have that kind of a device)
     
@@ -67,6 +67,35 @@ The information linked to these credentials includes the location data of Kristi
 If you are considering employing Kristian, you can certainly obtain the credentials by reaching out to him personally.
 
 ![Add device screen](/screenshots/PG2_addDevice.jpg)
+
+Bluetooth screen:
+
+Pressings the buttons the user interacts via bluetooth with the device.
+The user chooses a command which does one of few things:
+
+    - device stops sending data to the server for a certain number of minutes (T=222,??? - ??? - number of minutes)
+    - starts charging the internal battery of the device (using the main car battery)
+    - resets the device
+
+![Bluetooth screen](/screenshots/PG2_bluetooth.jpg)
+![Bluetooth screen](/screenshots/PG2_bluetooth_selectCommand.jpg)
+
+
+
+
+
+
+
+
+
+
+Additional settings screenshots:
+![Settings screen - calendar](/screenshots/PG2_settings_calendar.jpg)
+![Settings screen - time](/screenshots/PG2_settings_time.jpg)
+![Settings screen - history interval](/screenshots/PG2_bluetooth_selectCommand.jpg)
+
+
+
 
 
 

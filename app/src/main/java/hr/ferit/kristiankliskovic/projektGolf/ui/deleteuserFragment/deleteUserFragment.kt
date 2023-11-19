@@ -40,7 +40,7 @@ class deleteUserFragment : Fragment() {
                     })
                 builder.show()
             } else {
-                Toast.makeText(context, "Unesena lozinka nije ispravna", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Password isn't correct", Toast.LENGTH_SHORT).show()
             }
         }
         return binding.root

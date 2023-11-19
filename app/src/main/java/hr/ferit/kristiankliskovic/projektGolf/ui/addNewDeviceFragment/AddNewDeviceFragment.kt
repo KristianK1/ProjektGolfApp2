@@ -71,7 +71,7 @@ class AddNewDeviceFragment: Fragment() {
 
         val sameDevices = deviceRepository.getAllDevices().filter { o -> o.channelId == device.channelId && o.readAPIkey == device.readAPIkey};
         if(sameDevices.isNotEmpty()){
-            Toast.makeText(context, "Postoji uređaj sa istim API ključem i Channel Id-om", LENGTH_SHORT).show()
+            Toast.makeText(context, "You already have a device with the same API key and channel id.", LENGTH_SHORT).show()
         }
         else{
             binding.progressBar.visibility = View.VISIBLE
@@ -80,7 +80,7 @@ class AddNewDeviceFragment: Fragment() {
                     override fun callFinished(value: String?) {
                         if(value == null ){
                             Log.i("httpVV", "add new NULL")
-                            Toast.makeText(context, "Podaci ne odgovaraju stvarnom uređaju", LENGTH_SHORT).show()
+                            Toast.makeText(context, "Data isn't valid", LENGTH_SHORT).show()
                             binding.progressBar.visibility = View.GONE
                             return
                         }
@@ -90,7 +90,7 @@ class AddNewDeviceFragment: Fragment() {
                             Log.i("ajdSta", "tu sam")
                             deviceRepository.save(device);
                             myUserState.addDevice(device)
-                            Toast.makeText(context, "Uspješno obavljena provjera", LENGTH_SHORT).show()
+                            Toast.makeText(context, "Successfully checked data", LENGTH_SHORT).show()
                             Log.i("fetchAll", "prije poziva")
                             val endedListener: genericListener =
                                 object: genericListener {
@@ -104,7 +104,7 @@ class AddNewDeviceFragment: Fragment() {
 
                         }
                         else{
-                            Toast.makeText(context, "Podaci nisu uspješno provjereni", LENGTH_SHORT).show()
+                            Toast.makeText(context, "Data wasn't verified", LENGTH_SHORT).show()
                         }
                     }
                 }

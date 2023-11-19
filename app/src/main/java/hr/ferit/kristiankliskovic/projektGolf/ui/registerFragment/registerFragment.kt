@@ -45,7 +45,7 @@ class registerFragment : Fragment() {
             if (it.username == username && it.password == password) {
                 Toast.makeText(
                     context,
-                    "Postoji korisnik sa istim korisničkim imenom",
+                    "There is already a user with that username",
                     Toast.LENGTH_SHORT
                 ).show()
                 return;
@@ -53,11 +53,11 @@ class registerFragment : Fragment() {
         }
 
         if (username.length < 5) {
-            Toast.makeText(context, "Korisničko ime sadrži manje od 5 znakova", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Username needs to have at least 5 characters", Toast.LENGTH_SHORT).show()
         } else if (password.length < 5) {
-            Toast.makeText(context, "Lozinka sadrži manje od 5 znakova", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Password needs to have at least 5 characters", Toast.LENGTH_SHORT).show()
         } else if (password != password2) {
-            Toast.makeText(context, "Lozinke nisu jednake", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Passwords aren't equal", Toast.LENGTH_SHORT).show()
         } else {
             val newUser: user = user(username, password, arrayListOf())
             firebaseComm.addUser(newUser)

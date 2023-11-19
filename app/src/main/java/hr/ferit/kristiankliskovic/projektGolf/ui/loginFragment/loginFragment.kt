@@ -65,7 +65,7 @@ class loginFragment : Fragment() {
         val myUser = user(username, password, arrayListOf())
         val userInBase = firebaseComm.checkCreds(myUser)
         if (userInBase == null) {
-            Toast.makeText(context, "Podaci nisu ispravni", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Incorrect login data", Toast.LENGTH_SHORT).show()
             return
         }
         binding.progressBar.visibility = View.VISIBLE

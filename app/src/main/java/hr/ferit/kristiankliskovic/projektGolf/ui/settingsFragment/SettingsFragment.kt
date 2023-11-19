@@ -74,8 +74,6 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
                 DialogInterface.OnClickListener { dialog, which ->
                     if (which == 0) {
                         myUserState.logout()
-                        Toast.makeText(context, "Uspješno ste se odjavili", Toast.LENGTH_SHORT)
-                            .show()
                         val action =
                             SettingsFragmentDirections.actionSettingsFragmentToLoginFragment()
                         findNavController().navigate(action)
@@ -308,11 +306,11 @@ class SettingsFragment: Fragment(), onDeviceLongPress, onDeviceSelected {
         Log.i("unixx", "" + (1000L*60L*60L*24L*200L))
 
         if(unix2 <= unix1){
-            Toast.makeText(context, "Vrijeme početka i kraja nisu konzistenti", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Interval end needs to be before the interval start", Toast.LENGTH_SHORT).show()
             return false;
         }
         else if((unix2 - unix1) > (1000L*60L*60L*24L*200L)) {
-            Toast.makeText(context, "Vrijeme početka i kraja se razlikuju za više od 200 dana", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Interval is longer then 200 days", Toast.LENGTH_SHORT).show()
             return false;
         }
         return true;

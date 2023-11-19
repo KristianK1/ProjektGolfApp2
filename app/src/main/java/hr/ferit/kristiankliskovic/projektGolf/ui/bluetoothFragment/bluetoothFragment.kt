@@ -40,7 +40,7 @@ class bluetoothFragment : Fragment() {
             if (Bluetooth_uuid != null){
                 BTsend("T=111")
             } else {
-                Toast.makeText(context, "Nije odabran uređaj", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Select a device first", Toast.LENGTH_SHORT).show()
             }
         }
         binding.otherCommands.setOnClickListener {
@@ -54,14 +54,14 @@ class bluetoothFragment : Fragment() {
                     })
                 builder.show()
             } else {
-                Toast.makeText(context, "Nije odabran uređaj", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Select a device first", Toast.LENGTH_SHORT).show()
             }
         }
         binding.sendBTT2x.setOnClickListener {
             if (Bluetooth_uuid != null) {
                 BTsend("T=222,00x")
             } else {
-                Toast.makeText(context, "Nije odabran uređaj", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Select a device first", Toast.LENGTH_SHORT).show()
             }
         }
 

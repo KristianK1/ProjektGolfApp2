@@ -26,10 +26,10 @@ class changePasswordFragment: Fragment() {
                     myUserState.changePassword(binding.newPassET.text.toString())
                     findNavController().navigateUp()
                 }else{
-                    Toast.makeText(context, "Nove lozinke nisu jednake", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "New passwords aren't equal", Toast.LENGTH_SHORT).show()
                 }
             }else{
-                Toast.makeText(context, "Nije unesena ispravna trenutna lozinka", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Current password isn't correct", Toast.LENGTH_SHORT).show()
             }
         }
         return binding.root

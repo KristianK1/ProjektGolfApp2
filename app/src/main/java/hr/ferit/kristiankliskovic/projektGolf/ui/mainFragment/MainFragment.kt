@@ -189,14 +189,14 @@ class MainFragment : Fragment() {
             Log.i("errrS", "FS");
         }
         if (Name.isNullOrEmpty()) {
-            Toast.makeText(context, "Nije postavljen uređaj", LENGTH_SHORT).show()
+            Toast.makeText(context, "This account doesn't have devices", LENGTH_SHORT).show()
             startInterval = null
             endInterval = null
             displayMarkers = false
             currCenterLocation = null
             appIsBusy = false
             binding.centerView.setBackgroundColor(Color.RED);
-            map?.clear()
+//            map?.clear()
             return
         }
 
@@ -207,7 +207,7 @@ class MainFragment : Fragment() {
         if (displayChoice == 0) {
             Toast.makeText(
                 context,
-                "Nisu postavljeni parametri o dohvaćanju podataka",
+                "View parameters are invalid, open settings.",
                 LENGTH_SHORT
             ).show()
             startInterval = null
@@ -231,7 +231,7 @@ class MainFragment : Fragment() {
             } else {
                 Toast.makeText(
                     context,
-                    "Nisu postavljeni parametri o dohvaćanju podataka",
+                    "View parameters are invalid, open settings.",
                     LENGTH_SHORT
                 ).show()
                 startInterval = null
@@ -253,7 +253,7 @@ class MainFragment : Fragment() {
             if (startInterval == endInterval) {
                 Toast.makeText(
                     context,
-                    "Nisu postavljeni parametri o dohvaćanju podataka",
+                    "View parameters are invalid, open settings.",
                     LENGTH_SHORT
                 ).show()
                 Log.i("startInterval", "err")
